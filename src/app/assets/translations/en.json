@@ -1,0 +1,175 @@
+{
+  "language": {
+    "english": "English",
+    "ukrainian": "Ukrainian"
+  },
+  "validation": {
+    "title": {
+      "required": "Title is required"
+    },
+    "artist": {
+      "required": "Artist name is required"
+    },
+    "album": {
+      "required": "Album name is required"
+    },
+    "genres": {
+      "required": "At least one genre is required"
+    },
+    "coverUrl": {
+      "invalid": "Please enter a valid URL"
+    }
+  },
+  "actionConfirmation": {
+    "title": "Confirm Action",
+    "cancelButton": "Cancel",
+    "deleteButton": "Delete"
+  },
+  "genreInput": {
+    "label": "Genres",
+    "placeholder": "Type to search and add genres",
+    "noResults": "No matching genres found",
+    "invalidGenre": "This genre doesn't exist in our catalog"
+  },
+  "removeTrack": {
+    "button": "Delete",
+    "confirmMessage": "Are you sure you want to delete the track \"{{title}}\"? This action cannot be undone."
+  },
+  "createTrack": {
+    "button": "Create Track",
+    "modalTitle": "Create New Track",
+    "title": {
+      "label": "Track Title",
+      "placeholder": "Enter track title"
+    },
+    "artist": {
+      "label": "Artist",
+      "placeholder": "Enter artist name"
+    },
+    "album": {
+      "label": "Album",
+      "placeholder": "Enter album name"
+    },
+    "genres": {
+      "label": "Genres",
+      "placeholder": "Add genre tags (e.g. Rock, Jazz, Pop)"
+    },
+    "coverUrl": {
+      "label": "Cover Image URL",
+      "placeholder": "Enter cover image URL (optional)"
+    },
+    "preview": "Cover Preview",
+    "actions": {
+      "cancel": "Cancel",
+      "create": "Create Track"
+    }
+  },
+  "editTrack": {
+    "button": "Edit",
+    "modalTitle": "Edit Track",
+    "title": {
+      "label": "Track Title",
+      "placeholder": "Enter track title"
+    },
+    "artist": {
+      "label": "Artist",
+      "placeholder": "Enter artist name"
+    },
+    "album": {
+      "label": "Album",
+      "placeholder": "Enter album name"
+    },
+    "genres": {
+      "label": "Genres",
+      "placeholder": "Add genre tags (e.g. Rock, Jazz, Pop)"
+    },
+    "coverUrl": {
+      "label": "Cover Image URL",
+      "placeholder": "Enter cover image URL (optional)"
+    },
+    "preview": "Cover Preview",
+    "actions": {
+      "cancel": "Cancel",
+      "save": "Save Changes"
+    }
+  },
+  "trackAudio": {
+    "buttons": {
+      "add": "Add Audio",
+      "manage": "Manage Audio",
+      "remove": "Remove Audio",
+      "upload": "Upload",
+      "cancel": "Cancel"
+    },
+    "modalTitle": {
+      "manage": "Manage Audio File",
+      "upload": "Upload Audio File"
+    },
+    "currentAudio": "Current Audio",
+    "uploadAudio": "Upload Audio",
+    "replaceAudio": "Replace Audio",
+    "trackInfo": "Track",
+    "success": {
+      "uploading": "Uploading audio file...",
+      "uploaded": "Audio file uploaded successfully",
+      "removing": "Removing audio file...",
+      "removed": "Audio file removed successfully"
+    },
+    "error": {
+      "upload": "Failed to upload audio file. Ensure it is an MP3 or WAV file under 10MB.",
+      "remove": "Failed to remove audio file"
+    },
+    "fileInfo": {
+      "selected": "Selected",
+      "size": "MB",
+      "format": "Format",
+      "audioFile": "Audio File",
+      "hasAudio": "This track already has an audio file. Uploading a new file will replace the existing one."
+    },
+    "actions": {
+      "removeFile": "Remove",
+      "removeCurrentAudio": "Remove Current Audio"
+    }
+  },
+  "tracks": {
+    "title": "My Tracks",
+    "empty": "No tracks yet. Create your first track!",
+    "search": "Search tracks...",
+    "delete": {
+      "selected": "Delete Selected",
+      "confirmTitle": "Delete Tracks",
+      "confirmDescription": "Are you sure you want to delete {{count}} selected tracks? This action cannot be undone.",
+      "confirm": "Delete"
+    },
+    "sort": {
+      "title": "Title",
+      "artist": "Artist",
+      "album": "Album",
+      "date": "Date"
+    },
+    "filters": {
+      "genres": "Genres",
+      "audio": "Audio",
+      "withAudio": "With Audio",
+      "withoutAudio": "Without Audio"
+    }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "list": {
+    "itemsPerPage": "Items per page:",
+    "emptyMessage": "No items found",
+    "loading": "Loading...",
+    "itemsSelected": "{{count}} item selected",
+    "itemsSelectedPlural": "{{count}} items selected"
+  },
+  "filters": {
+    "title": "Filters",
+    "clearAll": "Clear all filters"
+  },
+  "sort": {
+    "title": "Sort by"
+  }
+}
