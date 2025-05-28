@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { genresApi } from "shared/lib/api/main";
 import { useTranslation } from "react-i18next";
@@ -6,71 +6,67 @@ import { cn } from "shared/lib/utils";
 import type { GenreInputProps } from "../lib/genreInput.types";
 import { isStringArray } from "shared/lib/utils/type-guards";
 
-const Tag = memo(
-  ({
-    tag,
-    index,
-    onRemove,
-  }: {
-    tag: string;
-    index: number;
-    onRemove: (index: number) => void;
-  }) => (
-    <div className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm">
-      <span>{tag}</span>
-      <button
-        type="button"
-        className="ml-1 text-blue-600 hover:text-blue-800"
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemove(index);
-        }}
+const Tag = ({
+  tag,
+  index,
+  onRemove,
+}: {
+  tag: string;
+  index: number;
+  onRemove: (index: number) => void;
+}) => (
+  <div className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm">
+    <span>{tag}</span>
+    <button
+      type="button"
+      className="ml-1 text-blue-600 hover:text-blue-800"
+      onClick={(e) => {
+        e.stopPropagation();
+        onRemove(index);
+      }}
+    >
+      <svg
+        className="w-3 h-3"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
       >
-        <svg
-          className="w-3 h-3"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </div>
-  )
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
 );
 
-const SuggestionItem = memo(
-  ({
-    suggestion,
-    isActive,
-    isSelected,
-    onClick,
-    onMouseEnter,
-  }: {
-    suggestion: string;
-    isActive: boolean;
-    isSelected: boolean;
-    onClick: () => void;
-    onMouseEnter: () => void;
-    index: number;
-  }) => (
-    <div
-      className={cn(
-        "px-4 py-2 cursor-pointer hover:bg-blue-50",
-        isActive && "bg-blue-100",
-        isSelected && "text-blue-700 font-medium"
-      )}
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-    >
-      {suggestion}
-    </div>
-  )
+const SuggestionItem = ({
+  suggestion,
+  isActive,
+  isSelected,
+  onClick,
+  onMouseEnter,
+}: {
+  suggestion: string;
+  isActive: boolean;
+  isSelected: boolean;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  index: number;
+}) => (
+  <div
+    className={cn(
+      "px-4 py-2 cursor-pointer hover:bg-blue-50",
+      isActive && "bg-blue-100",
+      isSelected && "text-blue-700 font-medium"
+    )}
+    onClick={onClick}
+    onMouseEnter={onMouseEnter}
+  >
+    {suggestion}
+  </div>
 );
 
 export const GenreInput = <TFieldValues extends Record<string, unknown>>({
@@ -109,59 +105,50 @@ export const GenreInput = <TFieldValues extends Record<string, unknown>>({
     setActiveIndex(-1);
   }, [inputValue, genres, filterSuggestions]);
 
-  const handleSelectSuggestion = useCallback(
-    (
-      suggestion: string,
-      currentTags: string[],
-      onChange: (value: string[]) => void
-    ) => {
-      if (!currentTags.includes(suggestion)) {
-        onChange([...currentTags, suggestion]);
+  const handleSelectSuggestion = (
+    suggestion: string,
+    currentTags: string[],
+    onChange: (value: string[]) => void
+  ) => {
+    if (!currentTags.includes(suggestion)) {
+      onChange([...currentTags, suggestion]);
+    }
+    setInputValue("");
+    setShowSuggestions(false);
+    setError(null);
+    inputRef.current?.focus();
+  };
+
+  const handleRemoveTag = (
+    index: number,
+    currentTags: string[],
+    onChange: (value: string[]) => void
+  ) => {
+    onChange(currentTags.filter((_, i) => i !== index));
+  };
+
+  const validateInput = (
+    input: string,
+    genresList: string[],
+    currentTags: string[],
+    onChange: (value: string[]) => void
+  ) => {
+    if (!input.trim()) return;
+
+    const exactGenre = genresList.find(
+      (g) => g.toLowerCase() === input.toLowerCase()
+    );
+
+    if (exactGenre) {
+      if (!currentTags.includes(exactGenre)) {
+        onChange([...currentTags, exactGenre]);
       }
-      setInputValue("");
-      setShowSuggestions(false);
-      setError(null);
-      inputRef.current?.focus();
-    },
-    []
-  );
+    } else {
+      setError(t("genreInput.invalidGenre"));
+    }
 
-  const handleRemoveTag = useCallback(
-    (
-      index: number,
-      currentTags: string[],
-      onChange: (value: string[]) => void
-    ) => {
-      onChange(currentTags.filter((_, i) => i !== index));
-    },
-    []
-  );
-
-  const validateInput = useCallback(
-    (
-      input: string,
-      genresList: string[],
-      currentTags: string[],
-      onChange: (value: string[]) => void
-    ) => {
-      if (!input.trim()) return;
-
-      const exactGenre = genresList.find(
-        (g) => g.toLowerCase() === input.toLowerCase()
-      );
-
-      if (exactGenre) {
-        if (!currentTags.includes(exactGenre)) {
-          onChange([...currentTags, exactGenre]);
-        }
-      } else {
-        setError(t("genreInput.invalidGenre"));
-      }
-
-      setInputValue("");
-    },
-    [t]
-  );
+    setInputValue("");
+  };
 
   return (
     <Controller

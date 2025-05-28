@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { CreateTrackButton } from "features/create-track";
 import { EditTrackButton } from "features/edit-track";
 import { RemoveTrackButton } from "features/remove-track";
@@ -56,9 +56,9 @@ export const HomePage = () => {
     });
   };
 
-  const handleQueryChange = useCallback((params: QueryParams) => {
+  const handleQueryChange = (params: QueryParams) => {
     setQueryParams(params);
-  }, []);
+  };
 
   const renderTrackMenu = (track: Track) => {
     // Check if track has audio file

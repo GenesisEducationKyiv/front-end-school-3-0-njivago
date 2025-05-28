@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { cn } from "shared/lib/utils";
 
 type AudioPlayerProps = {
@@ -58,16 +58,13 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setCurrentTime(newTime);
   };
 
-  const onVolumeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!audioRef.current) return;
+  const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!audioRef.current) return;
 
-      const newVolume = parseFloat(e.target.value);
-      audioRef.current.volume = newVolume;
-      setVolume(newVolume);
-    },
-    []
-  );
+    const newVolume = parseFloat(e.target.value);
+    audioRef.current.volume = newVolume;
+    setVolume(newVolume);
+  };
 
   const formatTime = (time: number) => {
     if (isNaN(time)) return "0:00";

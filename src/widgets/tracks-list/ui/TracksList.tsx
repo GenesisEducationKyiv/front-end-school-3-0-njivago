@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TrackCard } from "shared/ui/track-card";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { useTranslation } from "react-i18next";
@@ -85,47 +85,38 @@ export const TracksList = ({
     activeFilters.length,
   ]);
 
-  const handleSortChange = useCallback(
-    (field: keyof Track, direction: SortDirection) => {
-      if (field === "title" || field === "artist" || field === "album") {
-        setSortField(field);
-      } else if (field === ("createdAt" as keyof Track)) {
-        setSortField("createdAt");
-      }
-      setSortDirection(direction);
-      setPage(1);
-    },
-    []
-  );
+  const handleSortChange = (field: keyof Track, direction: SortDirection) => {
+    if (field === "title" || field === "artist" || field === "album") {
+      setSortField(field);
+    } else if (field === ("createdAt" as keyof Track)) {
+      setSortField("createdAt");
+    }
+    setSortDirection(direction);
+    setPage(1);
+  };
 
-  const handleFilterChange = useCallback(
-    (filters: Record<string, string[]>) => {
-      setActiveFilters(filters);
-      setPage(1);
-    },
-    []
-  );
+  const handleFilterChange = (filters: Record<string, string[]>) => {
+    setActiveFilters(filters);
+    setPage(1);
+  };
 
-  const handleSearch = useCallback((query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
     setPage(1);
-  }, []);
+  };
 
-  const handlePageSizeChange = useCallback((newLimit: number) => {
+  const handlePageSizeChange = (newLimit: number) => {
     setLimit(newLimit);
     setPage(1);
-  }, []);
+  };
 
-  const handleSelectionChange = useCallback(
-    (selectedIds: (string | number)[]) => {
-      setSelectedTrackIds(selectedIds.map((id) => id.toString()));
-    },
-    []
-  );
+  const handleSelectionChange = (selectedIds: (string | number)[]) => {
+    setSelectedTrackIds(selectedIds.map((id) => id.toString()));
+  };
 
   const { openConfirmation } = useActionConfirmation();
 
-  const handleDeleteTracks = useCallback(() => {
+  const handleDeleteTracks = () => {
     if (onDeleteTracks && selectedTrackIds.length > 0) {
       openConfirmation({
         title: t("tracks.delete.confirmTitle"),
@@ -147,22 +138,19 @@ export const TracksList = ({
         ),
       });
     }
-  }, [selectedTrackIds, onDeleteTracks, t, openConfirmation]);
+  };
 
-  const renderTrack = useCallback(
-    (track: Track) => (
-      <TrackCard
-        id={track.id}
-        title={track.title || ""}
-        artist={track.artist}
-        album={track.album}
-        cover={track.coverImage || DEFAULT_COVER}
-        tags={track.genres}
-        audioSrc={track.audioFile}
-        menuButton={renderMenu?.(track)}
-      />
-    ),
-    [renderMenu]
+  const renderTrack = (track: Track) => (
+    <TrackCard
+      id={track.id}
+      title={track.title || ""}
+      artist={track.artist}
+      album={track.album}
+      cover={track.coverImage || DEFAULT_COVER}
+      tags={track.genres}
+      audioSrc={track.audioFile}
+      menuButton={renderMenu?.(track)}
+    />
   );
 
   return (
