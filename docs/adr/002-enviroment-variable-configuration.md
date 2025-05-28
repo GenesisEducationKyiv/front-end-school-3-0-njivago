@@ -4,6 +4,10 @@
 
 Accepted
 
+## Date
+
+28-05-2025
+
 ## Context
 
 We need a way to configure our application beyond the source code to support different deployment environments. This includes:

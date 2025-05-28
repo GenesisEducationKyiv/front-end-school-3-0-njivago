@@ -4,6 +4,10 @@
 
 Accepted
 
+## Date
+
+28-05-2025
+
 ## Context
 
 We need a robust way to validate API responses in our application. This includes:
@@ -41,12 +45,15 @@ We will use Valibot schemas for API response validation with a centralized valid
 
 ```typescript
 // Schema definition (tracks.schema.ts)
-export const trackSchema = object({
-  id: string(),
-  title: string(),
-  artist: string(),
+export const getTracksSchema = v.object({
+  id: v.string(),
+  title: v.string(),
+  artist: v.string(),
   // ... other fields
 });
+
+// Response type (tracks.types.ts)
+export type TGetTracksResponse = PreparedResponse<typeof getTracksSchema>;
 
 // API endpoint with validation (tracks.api.ts)
 export const tracksApi = api.injectEndpoints({
@@ -61,9 +68,6 @@ export const tracksApi = api.injectEndpoints({
     }),
   }),
 });
-
-// Response type (tracks.types.ts)
-export type TGetTracksResponse = PreparedResponse<typeof getTracksSchema>;
 ```
 
 ## Consequences

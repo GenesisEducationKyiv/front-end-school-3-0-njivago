@@ -23,7 +23,6 @@ import {
   getTracksSchema,
   trackSchema,
 } from "./tracks.schema";
-import { isTrackResponse } from "../../../utils/type-guards";
 
 // Helper function to get all active getTracks query parameters
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -227,7 +226,7 @@ export const tracksApi = api.injectEndpoints({
         cachedQueries.forEach((queryArg) => {
           dispatch(
             tracksApi.util.updateQueryData("getTracks", queryArg, (draft) => {
-              if (draft?.data && isTrackResponse(updatedTrack)) {
+              if (draft?.data) {
                 const index = draft.data.findIndex(
                   (track) => track.id === params.id
                 );

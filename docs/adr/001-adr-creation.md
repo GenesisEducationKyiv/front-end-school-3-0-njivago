@@ -4,6 +4,10 @@
 
 Accepted
 
+## Date
+
+28-05-2025
+
 ## Context
 
 We need a standardized way to document and track architectural decisions in our project. This includes:
