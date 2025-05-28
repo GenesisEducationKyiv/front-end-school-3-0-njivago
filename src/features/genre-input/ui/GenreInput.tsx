@@ -4,6 +4,7 @@ import { genresApi } from "shared/lib/api/main";
 import { useTranslation } from "react-i18next";
 import { cn } from "shared/lib/utils";
 import type { GenreInputProps } from "../lib/genreInput.types";
+import { isStringArray } from "shared/lib/utils/type-guards";
 
 const Tag = memo(
   ({
@@ -72,7 +73,7 @@ const SuggestionItem = memo(
   )
 );
 
-export const GenreInput = <TFieldValues extends Record<string, any>>({
+export const GenreInput = <TFieldValues extends Record<string, unknown>>({
   name,
   control,
   label,
@@ -167,12 +168,11 @@ export const GenreInput = <TFieldValues extends Record<string, any>>({
       name={name}
       control={control}
       render={({ field, fieldState }) => {
-        const removeTagHandler = useCallback(
-          (index: number) => {
-            handleRemoveTag(index, field.value, field.onChange);
-          },
-          [field.value, field.onChange]
-        );
+        const value: string[] = isStringArray(field.value) ? field.value : [];
+
+        const removeTagHandler = (index: number) => {
+          handleRemoveTag(index, value, field.onChange);
+        };
 
         return (
           <div className="w-full">
@@ -190,7 +190,7 @@ export const GenreInput = <TFieldValues extends Record<string, any>>({
               )}
               onClick={() => inputRef.current?.focus()}
             >
-              {field.value.map((tag: string, index: number) => (
+              {value.map((tag: string, index: number) => (
                 <Tag
                   key={tag + index}
                   tag={tag}
@@ -214,17 +214,12 @@ export const GenreInput = <TFieldValues extends Record<string, any>>({
                   setTimeout(() => {
                     if (document.activeElement !== inputRef.current) {
                       setShowSuggestions(false);
-                      validateInput(
-                        inputValue,
-                        genres,
-                        field.value,
-                        field.onChange
-                      );
+                      validateInput(inputValue, genres, value, field.onChange);
                     }
                   }, 150);
                 }}
                 placeholder={
-                  field.value.length === 0
+                  value.length === 0
                     ? placeholder || t("genreInput.placeholder")
                     : ""
                 }
@@ -248,13 +243,9 @@ export const GenreInput = <TFieldValues extends Record<string, any>>({
                     key={suggestion}
                     suggestion={suggestion}
                     isActive={activeIndex === index}
-                    isSelected={field.value.includes(suggestion)}
+                    isSelected={value.includes(suggestion)}
                     onClick={() =>
-                      handleSelectSuggestion(
-                        suggestion,
-                        field.value,
-                        field.onChange
-                      )
+                      handleSelectSuggestion(suggestion, value, field.onChange)
                     }
                     onMouseEnter={() => setActiveIndex(index)}
                     index={index}

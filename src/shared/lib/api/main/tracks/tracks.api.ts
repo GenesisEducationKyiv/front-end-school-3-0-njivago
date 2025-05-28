@@ -1,6 +1,6 @@
 import { createQuery, prepareResponse } from "../../utils";
 import { api } from "../api";
-import {
+import type {
   TGetTracksOptions,
   TGetTracksResponse,
   TCreateTrackOptions,
@@ -23,18 +23,20 @@ import {
   getTracksSchema,
   trackSchema,
 } from "./tracks.schema";
+import { isTrackResponse } from "../../../utils/type-guards";
 
 // Helper function to get all active getTracks query parameters
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getCachedTrackQueries = (state: any) => {
   try {
     const currentQueries = Object.entries(state.mainApi.queries || {})
       .filter(([key]) => key.startsWith("getTracks"))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map(([_, value]: [string, any]) => value?.originalArgs)
       .filter(Boolean);
 
     return currentQueries.length > 0 ? currentQueries : [{}];
-  } catch (error) {
-    console.error("Error getting cached track queries:", error);
+  } catch (_) {
     return [{}];
   }
 };
@@ -83,33 +85,25 @@ export const tracksApi = api.injectEndpoints({
       query: createQuery("PUT", "/tracks/:id"),
       transformResponse: prepareResponse(trackSchema, "tracks", "updateTrack"),
       async onQueryStarted({ params }, { dispatch, queryFulfilled, getState }) {
-        try {
-          const { data: result } = await queryFulfilled;
+        const { data: result } = await queryFulfilled;
 
-          if (result.data) {
-            const cachedQueries = getCachedTrackQueries(getState());
+        if (result.data) {
+          const cachedQueries = getCachedTrackQueries(getState());
 
-            cachedQueries.forEach((queryArg) => {
-              dispatch(
-                tracksApi.util.updateQueryData(
-                  "getTracks",
-                  queryArg,
-                  (draft) => {
-                    if (draft?.data) {
-                      const index = draft.data.findIndex(
-                        (track) => track.id === params.id
-                      );
-                      if (index !== -1) {
-                        draft.data[index] = result.data;
-                      }
-                    }
+          cachedQueries.forEach((queryArg) => {
+            dispatch(
+              tracksApi.util.updateQueryData("getTracks", queryArg, (draft) => {
+                if (draft?.data) {
+                  const index = draft.data.findIndex(
+                    (track) => track.id === params.id
+                  );
+                  if (index !== -1) {
+                    draft.data[index] = result.data;
                   }
-                )
-              );
-            });
-          }
-        } catch (error) {
-          console.error("Failed to update track:", error);
+                }
+              })
+            );
+          });
         }
       },
     }),
@@ -132,7 +126,7 @@ export const tracksApi = api.injectEndpoints({
 
         try {
           await queryFulfilled;
-        } catch (error) {
+        } catch (_) {
           patchResults.forEach((patchResult) => patchResult.undo());
         }
       },
@@ -161,7 +155,7 @@ export const tracksApi = api.injectEndpoints({
 
         try {
           await queryFulfilled;
-        } catch (error) {
+        } catch (_) {
           patchResults.forEach((patchResult) => patchResult.undo());
         }
       },
@@ -233,13 +227,12 @@ export const tracksApi = api.injectEndpoints({
         cachedQueries.forEach((queryArg) => {
           dispatch(
             tracksApi.util.updateQueryData("getTracks", queryArg, (draft) => {
-              console.log(draft);
-              if (draft?.data) {
+              if (draft?.data && isTrackResponse(updatedTrack)) {
                 const index = draft.data.findIndex(
                   (track) => track.id === params.id
                 );
                 if (index !== -1) {
-                  draft.data[index] = updatedTrack as any;
+                  draft.data[index] = updatedTrack.data;
                 }
               }
             })

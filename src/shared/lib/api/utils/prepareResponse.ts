@@ -1,6 +1,6 @@
-import { TApiSuccessResponse, PreparedResponse } from "../types";
-import { BaseSchema, BaseIssue, flatten, safeParse } from "valibot";
-import { TApiSchema } from "../types/internal";
+import type { TApiSuccessResponse, PreparedResponse } from "../types";
+import { flatten, safeParse, type BaseSchema, type BaseIssue } from "valibot";
+import type { TApiSchema } from "../types/internal";
 
 const isApiResponse = <T>(value: unknown): value is TApiSuccessResponse<T> => {
   return typeof value === "object" && value !== null && "data" in value;
@@ -20,6 +20,7 @@ export const validateResponse =
     const result = safeParse(schema, response.data);
 
     if (!result.success) {
+      // oxlint-disable-next-line no-console
       console.error(
         `Failed to validate response for ${module}.${endpoint}:`,
         flatten(result.issues)
@@ -32,6 +33,7 @@ export const validateResponse =
     };
   };
 
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any
 export const prepareResponse = <T extends BaseSchema<any, any, any>>(
   schema: T,
   module: string,

@@ -1,4 +1,4 @@
-import { PropsWithChildren, useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type PropsWithChildren } from "react";
 import { cn } from "shared/lib/utils";
 import { type DropdownProps } from "../lib/Dropdown.type";
 import { ChevronIcon } from "./ChevronIcon";
