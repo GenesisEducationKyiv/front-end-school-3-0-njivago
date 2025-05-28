@@ -1,8 +1,18 @@
 {
   "plugins": ["react", "typescript", "react-perf", "import", "node", "oxc"],
-  "env": { "browser": true },
+  "env": { "browser": true, "node": true },
   "rules": {
-    "no-unused-vars": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
     "no-undef": "error",
     "no-duplicate-imports": "error",
     "no-constant-binary-expression": "error",
