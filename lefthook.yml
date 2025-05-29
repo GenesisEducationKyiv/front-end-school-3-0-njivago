@@ -1,0 +1,48 @@
+colors: true
+skip_output: [meta, success]
+
+#---------------------------------------------
+# Pre-commit checks
+#---------------------------------------------
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{ts,tsx}"
+      run: |
+        echo "🔍 Linting code..."
+        pnpm lint
+      skip: [merge, rebase]
+
+    typecheck:
+      glob: "*.{ts,tsx}"
+      run: |
+        echo "🔎 Type checking..."
+        pnpm type-check
+      skip: [merge, rebase]
+
+    validate:
+      run: |
+        echo "✅ Running validation..."
+        pnpm validate
+      skip: [merge, rebase]
+
+    no-debug:
+      glob: "*.{ts,tsx}"
+      run: |
+        echo "🐛 Checking for debug code..."
+        if grep -l "console.log\|debugger" {staged_files}; then
+          echo "⚠️ Debug code detected in staged files!"
+          exit 1
+        fi
+
+#---------------------------------------------
+# Commit message validation
+#---------------------------------------------
+commit-msg:
+  parallel: true
+  commands:
+    commitlint:
+      run: |
+        echo "📝 Validating commit message..."
+        pnpm dlx commitlint --edit "$1"

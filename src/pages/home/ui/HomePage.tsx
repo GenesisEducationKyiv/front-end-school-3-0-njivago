@@ -5,8 +5,8 @@ import { EditTrackButton } from "features/edit-track";
 import { RemoveTrackButton } from "features/remove-track";
 import { tracksApi } from "shared/lib/api/main";
 import { TracksList } from "widgets/tracks-list";
-import { UploadAudioButton } from "features/upload-audio";
 import type { Track } from "entities/track";
+import { UploadAudioButton } from "features/upload-audio";
 import type { CreateTrackSchema } from "features/create-track/lib/createTrack.schema";
 
 type QueryParams = {
