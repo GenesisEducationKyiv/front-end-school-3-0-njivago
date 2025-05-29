@@ -21,12 +21,6 @@ pre-commit:
         pnpm type-check
       skip: [merge, rebase]
 
-    validate:
-      run: |
-        echo "✅ Running validation..."
-        pnpm validate
-      skip: [merge, rebase]
-
     no-debug:
       glob: "*.{ts,tsx}"
       run: |

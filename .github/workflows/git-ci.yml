@@ -1,0 +1,50 @@
+name: Validate project
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20.13.1]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.14.2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Audit packages
+        run: pnpm audit
+    continue-on-error: true
+  test:
+    needs: audit
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20.13.1]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.14.2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run linter
+        run: pnpm lint
+      - name: Run type-check
+        run: pnpm type-check
