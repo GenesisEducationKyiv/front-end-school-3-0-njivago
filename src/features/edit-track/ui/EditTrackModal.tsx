@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useModal } from "shared/ui/modal/lib/ModalContext";
 import { Button } from "shared/ui/buttons/button/ui/Button";
-import type { EditTrackProps } from "../lib/editTrack.types";
-import { editTrackSchema, type EditTrackSchema } from "../lib/editTrack.schema";
 import { TrackForm } from "widgets/track-form";
+import { editTrackSchema } from "../lib/editTrack.schema";
+
+import type { EditTrackProps } from "../lib/editTrack.types";
+import type { EditTrackSchema } from "../lib/editTrack.schema";
 
 export const EditTrackButton = ({
   onSubmit,

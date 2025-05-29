@@ -1,13 +1,6 @@
 import type { TFunction } from "i18next";
-import {
-  object,
-  string,
-  array,
-  optional,
-  pipe,
-  check,
-  type InferInput,
-} from "valibot";
+import { object, string, array, optional, pipe, check } from "valibot";
+import type { InferInput } from "valibot";
 
 const isValidUrl = (value: string) => {
   if (!value) return true;

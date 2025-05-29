@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect, type PropsWithChildren } from "react";
+import { useState, useRef, useEffect } from "react";
+import type { PropsWithChildren } from "react";
 import { cn } from "shared/lib/utils";
-import { type DropdownProps } from "../lib/Dropdown.type";
-import { ChevronIcon } from "./ChevronIcon";
 import { Button } from "shared/ui/buttons/button/ui/Button";
+import type { DropdownProps } from "../lib/Dropdown.type";
+import { ChevronIcon } from "./ChevronIcon";
 
 export const Dropdown = ({
   label,

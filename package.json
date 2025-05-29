@@ -11,8 +11,8 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "oxlint .",
-    "lint:fix": "oxlint . --fix",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "type-check": "tsc --project tsconfig.json",
     "prepare": "husky ./.husky",
     "validate": "pnpm type-check && pnpm lint"

@@ -14,7 +14,6 @@
       }
     ],
     "no-undef": "error",
-    "no-duplicate-imports": "error",
     "no-constant-binary-expression": "error",
     "no-empty": "warn",
     "prefer-const": "error",
@@ -31,26 +30,11 @@
     "typescript/prefer-ts-expect-error": "error",
     "typescript/no-explicit-any": "warn",
     "unicorn/prefer-set-has": "error",
-    "sort-imports": [
-      "error",
-      {
-        "ignoreCase": false,
-        "ignoreDeclarationSort": false,
-        "ignoreMemberSort": false,
-        "allowSeparatedGroups": false,
-        "memberSyntaxSortOrder": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index",
-          "object",
-          "type"
-        ]
-      }
-    ],
-    "typescript/consistent-type-imports": "error"
+    "import/consistent-type-specifier-style": "error",
+    "no-duplicate-imports": "off",
+    "typescript/consistent-type-imports": "error",
+    "import/first": ["error", "absolute-first"],
+    "import/no-cycle": "error"
   },
   "ignores": ["node_modules", "dist", "coverage"]
 }

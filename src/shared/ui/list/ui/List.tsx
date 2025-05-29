@@ -1,14 +1,16 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
+
 import { cn } from "shared/lib/utils";
+import { Select } from "shared/ui/fields/select";
+import { useTranslation } from "react-i18next";
+import { Loader } from "shared/ui/loader";
+import type { ListProps, SortDirection } from "../lib/List.types";
 import { Pagination } from "./Pagination";
 import { SortDropdown } from "./SortDropdown";
 import { FilterDropdown } from "./FilterDropdown";
 import { SearchInput } from "./SearchInput";
 import { SelectionCheckbox } from "./SelectionCheckbox";
-import { Select } from "shared/ui/fields/select";
-import { useTranslation } from "react-i18next";
-import { Loader } from "shared/ui/loader";
-import type { ListProps, SortDirection } from "../lib/List.types";
 
 export const List = <T extends Record<string, unknown>>({
   items,

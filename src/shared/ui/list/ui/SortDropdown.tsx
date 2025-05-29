@@ -1,4 +1,5 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { Dropdown } from "shared/ui/dropdown";
 import { Button } from "shared/ui/buttons/button";
 import { Text } from "shared/ui/typography/text";
