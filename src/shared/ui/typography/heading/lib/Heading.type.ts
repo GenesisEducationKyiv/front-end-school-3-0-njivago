@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import type { HTMLAttributes } from "react";
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   variant?: "h1" | "h2" | "h3";

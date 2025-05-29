@@ -1,16 +1,18 @@
-import { useState, useEffect, useMemo, useCallback, ReactNode } from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
+
 import { cn } from "shared/lib/utils";
+import { Select } from "shared/ui/fields/select";
+import { useTranslation } from "react-i18next";
+import { Loader } from "shared/ui/loader";
+import type { ListProps, SortDirection } from "../lib/List.types";
 import { Pagination } from "./Pagination";
 import { SortDropdown } from "./SortDropdown";
 import { FilterDropdown } from "./FilterDropdown";
 import { SearchInput } from "./SearchInput";
 import { SelectionCheckbox } from "./SelectionCheckbox";
-import { Select } from "shared/ui/fields/select";
-import { useTranslation } from "react-i18next";
-import { Loader } from "shared/ui/loader";
-import type { ListProps, SortDirection } from "../lib/List.types";
 
-export const List = <T extends Record<string, any>>({
+export const List = <T extends Record<string, unknown>>({
   items,
   idField = "id" as keyof T,
   renderItem,
@@ -58,69 +60,53 @@ export const List = <T extends Record<string, any>>({
     setCurrentPageSize(pageSize);
   }, [pageSize]);
 
-  const totalPages = useMemo(() => {
-    if (totalItems !== undefined && currentPageSize > 0) {
-      return Math.ceil(totalItems / currentPageSize);
-    }
-    return Math.ceil(items.length / currentPageSize);
-  }, [totalItems, currentPageSize, items.length]);
+  const totalPages = Math.ceil(
+    totalItems !== undefined && currentPageSize > 0
+      ? totalItems / currentPageSize
+      : items.length / currentPageSize
+  );
 
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      setCurrentPage(newPage);
-      if (onPageChange) {
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    if (onPageChange) {
+      onPageChange(newPage);
+    }
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    const newPage =
+      Math.floor(((currentPage - 1) * currentPageSize) / newPageSize) + 1;
+    setCurrentPageSize(newPageSize);
+    setCurrentPage(newPage);
+
+    if (onPageSizeChange) {
+      onPageSizeChange(newPageSize);
+
+      if (newPage !== currentPage && onPageChange) {
         onPageChange(newPage);
       }
-    },
-    [onPageChange]
-  );
+    }
+  };
 
-  const handlePageSizeChange = useCallback(
-    (newPageSize: number) => {
-      const newPage =
-        Math.floor(((currentPage - 1) * currentPageSize) / newPageSize) + 1;
-      setCurrentPageSize(newPageSize);
-      setCurrentPage(newPage);
+  const handleSortChange = (field: keyof T, direction: SortDirection) => {
+    if (onSortChange) {
+      onSortChange(field, direction);
+    }
+  };
 
-      if (onPageSizeChange) {
-        onPageSizeChange(newPageSize);
+  const handleFilterChange = (filters: Record<string, string[]>) => {
+    if (onFilterChange) {
+      onFilterChange(filters);
+    }
+  };
 
-        if (newPage !== currentPage && onPageChange) {
-          onPageChange(newPage);
-        }
-      }
-    },
-    [currentPage, currentPageSize, onPageChange, onPageSizeChange]
-  );
+  const handleSearch = (query: string) => {
+    if (onSearch) {
+      onSearch(query);
+    }
+  };
 
-  const handleSortChange = useCallback(
-    (field: keyof T, direction: SortDirection) => {
-      if (onSortChange) {
-        onSortChange(field, direction);
-      }
-    },
-    [onSortChange]
-  );
-
-  const handleFilterChange = useCallback(
-    (filters: Record<string, string[]>) => {
-      if (onFilterChange) {
-        onFilterChange(filters);
-      }
-    },
-    [onFilterChange]
-  );
-
-  const handleSearch = useCallback(
-    (query: string) => {
-      if (onSearch) {
-        onSearch(query);
-      }
-    },
-    [onSearch]
-  );
-
-  const toggleSelectAll = useCallback(() => {
+  const toggleSelectAll = () => {
     if (isAllSelected) {
       setSelected({});
       setIsAllSelected(false);
@@ -144,40 +130,33 @@ export const List = <T extends Record<string, any>>({
         onSelectionChange(selectedIds);
       }
     }
-  }, [isAllSelected, items, idField, onSelectionChange]);
+  };
 
-  const toggleSelectItem = useCallback(
-    (itemId: string | number) => {
-      setSelected((prev) => {
-        const newSelected = { ...prev };
-        if (newSelected[itemId]) {
-          delete newSelected[itemId];
-        } else {
-          newSelected[itemId] = true;
-        }
+  const toggleSelectItem = (itemId: string | number) => {
+    setSelected((prev) => {
+      const newSelected = { ...prev };
+      if (newSelected[itemId]) {
+        delete newSelected[itemId];
+      } else {
+        newSelected[itemId] = true;
+      }
 
-        const allSelected = items.every(
-          (item) => newSelected[item[idField] as string | number]
-        );
-        setIsAllSelected(allSelected);
+      const allSelected = items.every(
+        (item) => newSelected[item[idField] as string | number]
+      );
+      setIsAllSelected(allSelected);
 
-        if (onSelectionChange) {
-          onSelectionChange(Object.keys(newSelected));
-        }
+      if (onSelectionChange) {
+        onSelectionChange(Object.keys(newSelected));
+      }
 
-        return newSelected;
-      });
-    },
-    [items, idField, onSelectionChange]
-  );
+      return newSelected;
+    });
+  };
 
-  const someSelected = useMemo(() => {
-    return Object.keys(selected).length > 0 && !isAllSelected;
-  }, [selected, isAllSelected]);
+  const someSelected = Object.keys(selected).length > 0 && !isAllSelected;
 
-  const selectedCount = useMemo(() => {
-    return Object.keys(selected).length;
-  }, [selected]);
+  const selectedCount = Object.keys(selected).length;
 
   const renderToolbar = (): ReactNode => {
     const hasToolbarItems =

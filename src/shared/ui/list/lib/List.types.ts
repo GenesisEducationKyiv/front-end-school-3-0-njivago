@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export type SortDirection = "asc" | "desc";
 
-export type SortOption<T = any> = {
+export type SortOption<T = unknown> = {
   label: string;
   value: keyof T;
 };
@@ -19,7 +19,7 @@ export type FilterGroup = {
   options: FilterOption[];
 };
 
-export type ListProps<T = any> = {
+export type ListProps<T = unknown> = {
   items: T[];
   idField?: keyof T;
   renderItem: (item: T) => ReactNode;

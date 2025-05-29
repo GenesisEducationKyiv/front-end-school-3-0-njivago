@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "shared/ui/fields/input";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { BaseSchema } from "valibot";
+import type { BaseSchema } from "valibot";
 import { GenreInput } from "features/genre-input";
 
 export type TrackFormData = {
@@ -17,6 +17,7 @@ export type TrackFormProps = {
   onSubmit: (data: TrackFormData) => void;
   onCancel: () => void;
   initialData?: TrackFormData;
+  // oxlint-disable-next-line no-explicit-any
   schema: BaseSchema<any, any, any>;
   submitLabel: string;
   fieldLabels: {

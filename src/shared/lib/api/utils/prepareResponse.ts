@@ -1,5 +1,10 @@
-import { TApiSuccessResponse } from "../types";
-import { BaseSchema, BaseIssue, flatten, safeParse } from "valibot";
+import type { TApiSuccessResponse, PreparedResponse } from "../types";
+import { flatten, safeParse, type BaseSchema, type BaseIssue } from "valibot";
+import type { TApiSchema } from "../types/internal";
+
+const isApiResponse = <T>(value: unknown): value is TApiSuccessResponse<T> => {
+  return typeof value === "object" && value !== null && "data" in value;
+};
 
 export const validateResponse =
   <T>(
@@ -15,6 +20,7 @@ export const validateResponse =
     const result = safeParse(schema, response.data);
 
     if (!result.success) {
+      // oxlint-disable-next-line no-console
       console.error(
         `Failed to validate response for ${module}.${endpoint}:`,
         flatten(result.issues)
@@ -27,19 +33,19 @@ export const validateResponse =
     };
   };
 
-export const prepareResponse = <T>(
-  schema: BaseSchema<unknown, T, BaseIssue<T>>,
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any
+export const prepareResponse = <T extends BaseSchema<any, any, any>>(
+  schema: T,
   module: string,
   endpoint: string
-  // ToDo: add type for response for typesafety
-): any => {
+): ((baseQueryReturnValue: unknown) => Promise<PreparedResponse<T>>) => {
   const getResponse = validateResponse(schema, module, endpoint);
 
-  return async (response: TApiSuccessResponse<T>) => {
-    if (!response) {
+  return async (baseQueryReturnValue: unknown) => {
+    if (!isApiResponse<TApiSchema<T>>(baseQueryReturnValue)) {
       return { data: null, meta: undefined };
     }
 
-    return await getResponse(response);
+    return await getResponse(baseQueryReturnValue);
   };
 };

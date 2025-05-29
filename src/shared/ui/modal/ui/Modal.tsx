@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { useModal } from "../lib/ModalContext";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { Loader } from "shared/ui/loader";

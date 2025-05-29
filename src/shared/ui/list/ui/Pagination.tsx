@@ -4,12 +4,12 @@ import { Text } from "shared/ui/typography/text";
 import { cn } from "shared/lib/utils";
 import { useTranslation } from "react-i18next";
 
-interface PaginationProps {
+type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
-}
+};
 
 export const Pagination = ({
   currentPage,

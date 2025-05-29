@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useModal } from "shared/ui/modal/lib/ModalContext";
 import { Button } from "shared/ui/buttons";
@@ -97,7 +98,7 @@ const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
 
       onSuccess?.();
       closeModal();
-    } catch (error) {
+    } catch (_) {
       setStatusMessage({
         text: t("trackAudio.error.remove"),
         type: "error",
@@ -121,7 +122,7 @@ const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
 
       onSuccess?.();
       closeModal();
-    } catch (error) {
+    } catch (_) {
       setStatusMessage({
         text: t("trackAudio.error.upload"),
         type: "error",
@@ -135,7 +136,7 @@ const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
     } else {
       setLoading(false);
     }
-  }, [isUploading, isDeleting]);
+  }, [isUploading, isDeleting, setLoading]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

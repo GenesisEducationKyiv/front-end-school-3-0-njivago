@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { cn } from "shared/lib/utils";
-import { HeadingProps } from "../lib/Heading.type";
+import type { HeadingProps } from "../lib/Heading.type";
 import { variantStyles } from "../lib/Heading.constants";
 
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(

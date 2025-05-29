@@ -1,5 +1,5 @@
-import { PreparedResponse, QueryOptions } from "../../types";
-import {
+import type { PreparedResponse, QueryOptions } from "../../types";
+import type {
   deleteTracksSchema,
   getTracksSchema,
   trackSchema,

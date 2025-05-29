@@ -1,21 +1,22 @@
 {
-  "$schema": "https://oxc.oxc-project.org/schema/oxlint.json",
-  "plugins": {
-    "react": true,
-    "typescript": true,
-    "jsx-a11y": true,
-    "prettier": true,
-    "promise": true
-  },
+  "plugins": ["react", "typescript", "react-perf", "import", "node", "oxc"],
+  "env": { "browser": true, "node": true },
   "rules": {
-    "no-unused-vars": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
     "no-undef": "error",
-    "no-duplicate-imports": "error",
     "no-constant-binary-expression": "error",
     "no-empty": "warn",
     "prefer-const": "error",
-    "quotes": ["error", ""],
-    "jsx-quotes": ["error", "prefer-single"],
     "no-console": "warn",
     "react/prefer-stateless-function": "error",
     "react/no-deprecated": "error",
@@ -28,15 +29,12 @@
     "typescript/consistent-type-definitions": ["error", "type"],
     "typescript/prefer-ts-expect-error": "error",
     "typescript/no-explicit-any": "warn",
-    "typescript/consistent-type-imports": "error",
-    "jsx-a11y/alt-text": "error",
-    "jsx-a11y/anchor-has-content": "error",
-    "jsx-a11y/click-events-have-key-events": "error",
-    "jsx-a11y/no-autofocus": "warn",
     "unicorn/prefer-set-has": "error",
-    "promise/catch-or-return": "error",
-    "promise/no-nesting": "warn",
-    "promise/prefer-await-to-then": "error"
+    "import/consistent-type-specifier-style": "error",
+    "no-duplicate-imports": "off",
+    "typescript/consistent-type-imports": "error",
+    "import/first": ["error", "absolute-first"],
+    "import/no-cycle": "error"
   },
-  "ignores": ["node_modules", "dist", "build", ".next", "coverage"]
+  "ignores": ["node_modules", "dist", "coverage"]
 }

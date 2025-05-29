@@ -1,14 +1,15 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { TrackCard } from "shared/ui/track-card";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { useTranslation } from "react-i18next";
-import { List, SortOption, FilterGroup } from "shared/ui/list";
+import { List, type SortOption, type FilterGroup } from "shared/ui/list";
 import { useActionConfirmation } from "widgets/action-confirmation";
 import type { TracksListProps } from "../lib/TracksList.types";
 import type { Track } from "entities/track";
 import type { SortDirection } from "shared/ui/list/lib/List.types";
 import { genresApi } from "shared/lib/api/main/genres/genres.api";
-import { TGenresApi } from "shared/lib/api/main";
+import type { TGenresApi } from "shared/lib/api/main";
+
 const DEFAULT_COVER = "https://placehold.co/400x400?text=No+Cover";
 
 // ToDo: optimize and improve the list, it was developed in a rush
@@ -84,47 +85,38 @@ export const TracksList = ({
     activeFilters.length,
   ]);
 
-  const handleSortChange = useCallback(
-    (field: keyof Track, direction: SortDirection) => {
-      if (field === "title" || field === "artist" || field === "album") {
-        setSortField(field);
-      } else if (field === ("createdAt" as keyof Track)) {
-        setSortField("createdAt");
-      }
-      setSortDirection(direction);
-      setPage(1);
-    },
-    []
-  );
+  const handleSortChange = (field: keyof Track, direction: SortDirection) => {
+    if (field === "title" || field === "artist" || field === "album") {
+      setSortField(field);
+    } else if (field === ("createdAt" as keyof Track)) {
+      setSortField("createdAt");
+    }
+    setSortDirection(direction);
+    setPage(1);
+  };
 
-  const handleFilterChange = useCallback(
-    (filters: Record<string, string[]>) => {
-      setActiveFilters(filters);
-      setPage(1);
-    },
-    []
-  );
+  const handleFilterChange = (filters: Record<string, string[]>) => {
+    setActiveFilters(filters);
+    setPage(1);
+  };
 
-  const handleSearch = useCallback((query: string) => {
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
     setPage(1);
-  }, []);
+  };
 
-  const handlePageSizeChange = useCallback((newLimit: number) => {
+  const handlePageSizeChange = (newLimit: number) => {
     setLimit(newLimit);
     setPage(1);
-  }, []);
+  };
 
-  const handleSelectionChange = useCallback(
-    (selectedIds: (string | number)[]) => {
-      setSelectedTrackIds(selectedIds.map((id) => id.toString()));
-    },
-    []
-  );
+  const handleSelectionChange = (selectedIds: (string | number)[]) => {
+    setSelectedTrackIds(selectedIds.map((id) => id.toString()));
+  };
 
   const { openConfirmation } = useActionConfirmation();
 
-  const handleDeleteTracks = useCallback(() => {
+  const handleDeleteTracks = () => {
     if (onDeleteTracks && selectedTrackIds.length > 0) {
       openConfirmation({
         title: t("tracks.delete.confirmTitle"),
@@ -146,22 +138,19 @@ export const TracksList = ({
         ),
       });
     }
-  }, [selectedTrackIds, onDeleteTracks, t, openConfirmation]);
+  };
 
-  const renderTrack = useCallback(
-    (track: Track) => (
-      <TrackCard
-        id={track.id}
-        title={track.title || ""}
-        artist={track.artist}
-        album={track.album}
-        cover={track.coverImage || DEFAULT_COVER}
-        tags={track.genres}
-        audioSrc={track.audioFile}
-        menuButton={renderMenu?.(track)}
-      />
-    ),
-    [renderMenu]
+  const renderTrack = (track: Track) => (
+    <TrackCard
+      id={track.id}
+      title={track.title || ""}
+      artist={track.artist}
+      album={track.album}
+      cover={track.coverImage || DEFAULT_COVER}
+      tags={track.genres}
+      audioSrc={track.audioFile}
+      menuButton={renderMenu?.(track)}
+    />
   );
 
   return (

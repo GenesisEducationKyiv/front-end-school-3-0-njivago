@@ -1,6 +1,6 @@
 import { createQuery, prepareResponse } from "../../utils";
 import { api } from "../api";
-import { TGetGenresOptions, TGetGenresResponse } from "./genres.types";
+import type { TGetGenresOptions, TGetGenresResponse } from "./genres.types";
 import { getGenresSchema } from "./genres.schema";
 
 export const genresApi = api.injectEndpoints({

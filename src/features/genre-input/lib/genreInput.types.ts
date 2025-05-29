@@ -1,4 +1,4 @@
-import { Control, FieldPath, FieldValues } from "react-hook-form";
+import type { Control, FieldPath, FieldValues } from "react-hook-form";
 
 export type GenreInputProps<
   TFieldValues extends FieldValues = FieldValues,

@@ -1,5 +1,5 @@
-import { TFetchMethod } from "../types";
-import { ExtractParams } from "../types/internal";
+import type { TFetchMethod } from "../types";
+import type { ExtractParams } from "../types/internal";
 
 type TEndpointRoute = `/${string}` | `/${string}/`;
 

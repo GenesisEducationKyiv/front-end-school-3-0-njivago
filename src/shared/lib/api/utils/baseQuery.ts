@@ -1,5 +1,5 @@
-import { BaseQueryFn } from "@reduxjs/toolkit/query/react";
-import { TFetchMethod } from "../types";
+import type { BaseQueryFn } from "@reduxjs/toolkit/query/react";
+import type { TFetchMethod } from "../types";
 import { populateParams } from "./populateParams";
 import { populateSearchParams } from "./populateSearchParams";
 
@@ -83,6 +83,7 @@ export const baseQuery =
       }
 
       const responseData = await response.json().catch((error) => {
+        // eslint-disable-next-line no-console -- necessary
         console.error("JSON parse error:", error);
         return null;
       });
