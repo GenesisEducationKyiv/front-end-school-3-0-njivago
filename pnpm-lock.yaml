@@ -58,6 +58,9 @@ devDependencies:
   autoprefixer:
     specifier: ^10.4.21
     version: 10.4.21(postcss@8.5.3)
+  babel-plugin-react-compiler:
+    specifier: 19.1.0-rc.2
+    version: 19.1.0-rc.2
   husky:
     specifier: ^9.1.7
     version: 9.1.7
@@ -966,6 +969,12 @@ packages:
       picocolors: 1.1.1
       postcss: 8.5.3
       postcss-value-parser: 4.2.0
+    dev: true
+
+  /babel-plugin-react-compiler@19.1.0-rc.2:
+    resolution: {integrity: sha512-kSNA//p5fMO6ypG8EkEVPIqAjwIXm5tMjfD1XRPL/sRjYSbJ6UsvORfaeolNWnZ9n310aM0xJP7peW26BuCVzA==}
+    dependencies:
+      '@babel/types': 7.27.0
     dev: true
 
   /balanced-match@1.0.2:
