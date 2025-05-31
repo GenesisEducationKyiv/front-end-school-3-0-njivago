@@ -20,7 +20,7 @@ export const ImageInput = ({
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result as string);
+        typeof reader.result === "string" && setPreview(reader.result);
       };
       reader.readAsDataURL(file);
       onChange(file);

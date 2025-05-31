@@ -37,20 +37,22 @@ export const TracksList = ({
   const [selectedTrackIds, setSelectedTrackIds] = useState<string[]>([]);
 
   const { data: genresResponse } = genresApi.useGetGenresQuery();
-  const uniqueGenres = (genresResponse as TGenresApi.TGetGenresResponse) || [];
+
+  const uniqueGenres: TGenresApi.TGetGenresResponse["data"] =
+    genresResponse?.data || [];
 
   const sortOptions: SortOption<Track>[] = [
     { label: t("tracks.sort.title"), value: "title" },
     { label: t("tracks.sort.artist"), value: "artist" },
     { label: t("tracks.sort.album"), value: "album" },
-    { label: t("tracks.sort.date"), value: "createdAt" as keyof Track },
+    { label: t("tracks.sort.date"), value: "createdAt" },
   ];
 
   const filterGroups: FilterGroup[] = [
     {
       id: "genres",
       label: t("tracks.filters.genres"),
-      options: uniqueGenres?.data?.map((genre: string) => ({
+      options: uniqueGenres?.map((genre: string) => ({
         id: genre.toLowerCase().replace(/\s+/g, "-"),
         label: genre,
         value: genre,
@@ -88,7 +90,7 @@ export const TracksList = ({
   const handleSortChange = (field: keyof Track, direction: SortDirection) => {
     if (field === "title" || field === "artist" || field === "album") {
       setSortField(field);
-    } else if (field === ("createdAt" as keyof Track)) {
+    } else if (field === "createdAt") {
       setSortField("createdAt");
     }
     setSortDirection(direction);
@@ -166,7 +168,7 @@ export const TracksList = ({
       onPageSizeChange={handlePageSizeChange}
       pageSizeOptions={[5, 10, 20, 50, 100]}
       sortOptions={sortOptions}
-      initialSort={sortField as keyof Track}
+      initialSort={sortField}
       initialSortDirection={sortDirection}
       onSortChange={handleSortChange}
       filterGroups={filterGroups}

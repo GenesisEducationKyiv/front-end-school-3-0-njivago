@@ -7,4 +7,5 @@ export type Track = {
   genres: string[];
   audioFile?: string;
   slug: string;
+  createdAt?: string;
 };

@@ -34,7 +34,9 @@ export const validateResponse =
   };
 
 // oxlint-disable-next-line @typescript-eslint/no-explicit-any
-export const prepareResponse = <T extends BaseSchema<any, any, any>>(
+export const prepareResponse = <
+  T extends BaseSchema<unknown, unknown, BaseIssue<unknown>>
+>(
   schema: T,
   module: string,
   endpoint: string

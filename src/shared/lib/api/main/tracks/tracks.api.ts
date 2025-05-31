@@ -25,12 +25,12 @@ import {
 } from "./tracks.schema";
 
 // Helper function to get all active getTracks query parameters
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- due to typo of RootState
 const getCachedTrackQueries = (state: any) => {
   try {
     const currentQueries = Object.entries(state.mainApi.queries || {})
       .filter(([key]) => key.startsWith("getTracks"))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- same
       .map(([_, value]: [string, any]) => value?.originalArgs)
       .filter(Boolean);
 

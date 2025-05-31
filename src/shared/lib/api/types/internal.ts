@@ -1,4 +1,4 @@
-import type { BaseSchema, InferInput } from "valibot";
+import type { BaseSchema, BaseIssue, InferInput } from "valibot";
 import type {
   IsAllOptional,
   IsUnion,
@@ -20,8 +20,9 @@ export type ExtractParams<T extends string> =
     ? Param
     : never;
 
-// oxlint-disable-next-line @typescript-eslint/no-explicit-any
-export type TApiSchema<T extends BaseSchema<any, any, any>> = InferInput<T>;
+export type TApiSchema<
+  T extends BaseSchema<unknown, unknown, BaseIssue<unknown>>
+> = InferInput<T>;
 
 export type TMakeApiOption<
   TOptionName extends string,
