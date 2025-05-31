@@ -27,10 +27,9 @@ export const ActionConfirmationModal = ({
       setIsProcessing(false);
       setLoading(false);
       closeModal();
-    } catch (error) {
+    } catch (_) {
       setIsProcessing(false);
       setLoading(false);
-      console.error("Error during action confirmation:", error);
     }
   };
 

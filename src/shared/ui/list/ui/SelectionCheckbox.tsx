@@ -1,6 +1,6 @@
 import { cn } from "shared/lib/utils";
 
-interface SelectionCheckboxProps {
+type SelectionCheckboxProps = {
   id?: string;
   checked: boolean;
   onChange: (checked: boolean) => void;

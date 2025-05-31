@@ -9,7 +9,13 @@ export default defineConfig(async ({ mode }) => {
     root: ".",
     base: env.VITE_BASE_URL || "/",
     publicDir: "public",
-    plugins: [react()],
+    plugins: [
+      react({
+        babel: {
+          plugins: [["babel-plugin-react-compiler", { target: "19" }]],
+        },
+      }),
+    ],
     resolve: {
       alias: {
         shared: resolve(__dirname, "src/shared"),

@@ -4,12 +4,12 @@ import { Text } from "shared/ui/typography/text";
 import { cn } from "shared/lib/utils";
 import { useTranslation } from "react-i18next";
 
-interface PaginationProps {
+type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
-}
+};
 
 export const Pagination = ({
   currentPage,
@@ -97,7 +97,7 @@ export const Pagination = ({
             key={page}
             variant={currentPage === page ? "primary" : "outline"}
             size="sm"
-            onClick={() => onPageChange(page as number)}
+            onClick={() => onPageChange(Number(page))}
             className="min-w-[36px]"
           >
             {page}

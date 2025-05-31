@@ -1,4 +1,5 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { Dropdown } from "shared/ui/dropdown";
 import { Button } from "shared/ui/buttons/button";
 import { Text } from "shared/ui/typography/text";
@@ -6,13 +7,13 @@ import { cn } from "shared/lib/utils";
 import { useTranslation } from "react-i18next";
 import type { SortDirection, SortOption } from "../lib/List.types";
 
-interface SortDropdownProps<T = any> {
+type SortDropdownProps<T = unknown> = {
   options: SortOption<T>[];
   initialSort?: keyof T;
   initialDirection?: SortDirection;
   onSortChange: (field: keyof T, direction: SortDirection) => void;
   className?: string;
-}
+};
 
 export const SortDropdown = <T,>({
   options,

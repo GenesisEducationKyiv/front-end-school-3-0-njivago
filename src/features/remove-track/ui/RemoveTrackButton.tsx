@@ -22,8 +22,8 @@ export const RemoveTrackButton = ({
       if (onRemoveSuccess) {
         onRemoveSuccess();
       }
-    } catch (error) {
-      console.error("Failed to delete track:", error);
+    } catch (_) {
+      // ToDo: handle error in toast
     }
   };
 

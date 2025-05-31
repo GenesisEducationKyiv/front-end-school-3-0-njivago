@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { DropdownItemButton } from "shared/ui/buttons";
 import { Dropdown } from "shared/ui/dropdown";
-import { LanguageSwitcherProps } from "../lib/LanguageSwitcher.type";
+import type { LanguageSwitcherProps } from "../lib/LanguageSwitcher.type";
 import { twMerge } from "tailwind-merge";
 
 export const LanguageSwitcher: FC<LanguageSwitcherProps> = ({ className }) => {

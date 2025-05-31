@@ -1,8 +1,9 @@
-import { PropsWithChildren, useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
+import type { PropsWithChildren } from "react";
 import { cn } from "shared/lib/utils";
-import { type DropdownProps } from "../lib/Dropdown.type";
-import { ChevronIcon } from "./ChevronIcon";
 import { Button } from "shared/ui/buttons/button/ui/Button";
+import type { DropdownProps } from "../lib/Dropdown.type";
+import { ChevronIcon } from "./ChevronIcon";
 
 export const Dropdown = ({
   label,
@@ -16,10 +17,11 @@ export const Dropdown = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = ({ target }: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        target instanceof Node &&
+        !dropdownRef.current.contains(target)
       ) {
         setIsOpen(false);
       }
