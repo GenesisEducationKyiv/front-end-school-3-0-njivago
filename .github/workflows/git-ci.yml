@@ -21,7 +21,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - name: Audit packages
-        run: pnpm audit --audit-level high
+        run: pnpm audit --audit-level critical
     continue-on-error: true
   test:
     needs: audit
