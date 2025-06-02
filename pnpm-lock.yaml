@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  svgr@2.0.0:
+    hash: a5dgeypnf6uzep6pnmbhp4cray
+    path: patches/svgr@2.0.0.patch
+
 dependencies:
   '@hookform/resolvers':
     specifier: ^5.0.1
@@ -84,7 +89,7 @@ devDependencies:
     version: 8.5.3
   svgr:
     specifier: ^2.0.0
-    version: 2.0.0
+    version: 2.0.0(patch_hash=a5dgeypnf6uzep6pnmbhp4cray)
   tailwindcss:
     specifier: 3.4.17
     version: 3.4.17
@@ -3384,7 +3389,7 @@ packages:
     resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==}
     dev: true
 
-  /svgr@2.0.0:
+  /svgr@2.0.0(patch_hash=a5dgeypnf6uzep6pnmbhp4cray):
     resolution: {integrity: sha512-t78LpiuJrZdVuYpXexR6s9yvkxNlTf5oe7G2mb3yifUgNjyH+5CTeTHqKbqZGAOyd/Gu6VLbwiPqyDtyK8XMgQ==}
     engines: {node: '>=8'}
     deprecated: Please install @svgr/cli, @svgr/core or @svgr/webpack
@@ -3394,6 +3399,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+    patched: true
 
   /tailwind-merge@3.2.0:
     resolution: {integrity: sha512-FQT/OVqCD+7edmmJpsgCsY820RTD5AkBryuG5IUqR5YQZSdj5xlH5nLgH7YPths7WsLPSpSBNneJdM8aS8aeFA==}
