@@ -4,6 +4,7 @@ on:
   push:
 env:
   PNPM_CACHE_FOLDER: .cache/pnpm
+  NODE_NO_WARNINGS: 1
 jobs:
   audit:
     runs-on: ubuntu-22.04
