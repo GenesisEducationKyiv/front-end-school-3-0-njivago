@@ -32,6 +32,7 @@
     "react-hook-form": "^7.56.0",
     "react-i18next": "^15.4.1",
     "react-redux": "^9.2.0",
+    "react-toastify": "^11.0.5",
     "tailwind-merge": "^3.2.0",
     "valibot": "^1.0.0"
   },
@@ -48,8 +49,10 @@
     "lint-staged": "^15.5.1",
     "oxlint": "^0.16.7",
     "postcss": "^8.5.3",
+    "svgr": "^2.0.0",
     "tailwindcss": "3.4.17",
     "typescript": "^5.8.3",
-    "vite": "^6.3.2"
+    "vite": "^6.3.2",
+    "vite-plugin-svgr": "^4.3.0"
   }
 }

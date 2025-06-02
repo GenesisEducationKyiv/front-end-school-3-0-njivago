@@ -1,6 +1,7 @@
 import { ModalProvider, Modal } from "shared/ui/modal";
 import { Header } from "widgets/header";
 import { HomePage } from "pages/home";
+import { ToastContainer } from "react-toastify";
 import "./styles/index.css";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
           <HomePage />
         </main>
         <Modal />
+        <ToastContainer />
       </div>
     </ModalProvider>
   );

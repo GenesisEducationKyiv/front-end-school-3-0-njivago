@@ -2,6 +2,7 @@ import { Button } from "shared/ui/buttons/button/ui/Button";
 import { useTranslation } from "react-i18next";
 import { tracksApi } from "shared/lib/api/main";
 import { useActionConfirmation } from "widgets/action-confirmation";
+import { useToast } from "shared/ui/toast";
 import type { RemoveTrackProps } from "../lib/removeTrack.types";
 
 export const RemoveTrackButton = ({
@@ -12,6 +13,7 @@ export const RemoveTrackButton = ({
   const { t } = useTranslation();
   const { openConfirmation } = useActionConfirmation();
   const [deleteTrack] = tracksApi.useDeleteTrackMutation();
+  const { showSuccess, showError } = useToast();
 
   const handleDelete = async () => {
     try {
@@ -19,11 +21,12 @@ export const RemoveTrackButton = ({
         params: { id: trackId },
         body: {},
       });
+      showSuccess(t("removeTrack.success"));
       if (onRemoveSuccess) {
         onRemoveSuccess();
       }
-    } catch (_) {
-      // ToDo: handle error in toast
+    } catch (error) {
+      showError(error as string); // ToDo: handle errors properly
     }
   };
 
