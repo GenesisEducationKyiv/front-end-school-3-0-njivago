@@ -1,12 +1,12 @@
-import { TFunction } from "i18next";
+import type { TFunction } from "i18next";
 import {
   object,
   string,
   array,
   optional,
-  InferInput,
   pipe,
   check,
+  type InferInput,
 } from "valibot";
 
 const isValidUrl = (value: string) => {

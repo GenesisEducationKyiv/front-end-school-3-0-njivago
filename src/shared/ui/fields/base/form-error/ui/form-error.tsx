@@ -1,7 +1,7 @@
-import { FieldError } from "react-hook-form";
+import type { FieldError } from "react-hook-form";
 import { cn } from "shared/lib/utils";
 
-interface FormErrorProps {
+type FormErrorProps = {
   error?: FieldError;
   className?: string;
 }

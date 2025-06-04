@@ -1,4 +1,4 @@
-import { FieldError } from "react-hook-form";
+import type { FieldError } from "react-hook-form";
 
 export type ImageInputProps = {
   label?: string;

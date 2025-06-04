@@ -1,7 +1,7 @@
-import "./styles/index.css";
 import { ModalProvider, Modal } from "shared/ui/modal";
 import { Header } from "widgets/header";
 import { HomePage } from "pages/home";
+import "./styles/index.css";
 
 function App() {
   return (

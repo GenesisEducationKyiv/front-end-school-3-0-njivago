@@ -1,4 +1,4 @@
-interface ChevronIconProps {
+type ChevronIconProps = {
   className?: string;
 }
 

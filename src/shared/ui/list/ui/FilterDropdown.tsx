@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { Dropdown } from "shared/ui/dropdown";
 import { Button } from "shared/ui/buttons/button";
 import { Text } from "shared/ui/typography/text";
@@ -7,12 +7,12 @@ import { cn } from "shared/lib/utils";
 import { useTranslation } from "react-i18next";
 import type { FilterGroup } from "../lib/List.types";
 
-interface FilterDropdownProps {
+type FilterDropdownProps = {
   filterGroups: FilterGroup[];
   initialFilters?: Record<string, string[]>;
   onFilterChange: (filters: Record<string, string[]>) => void;
   className?: string;
-}
+};
 
 export const FilterDropdown = ({
   filterGroups,

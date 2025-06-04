@@ -1,12 +1,12 @@
-import { BaseSchema } from "valibot";
-import {
+import type { BaseSchema } from "valibot";
+import type {
   TMakeApiOption,
   TParamsDefault,
   TSearchParamsDefault,
   TBodyDefault,
   TApiSchema,
 } from "./internal";
-import { And, Extends, UnionIfNotNullish } from "./typescript";
+import type { And, Extends, UnionIfNotNullish } from "./typescript";
 
 export type TFetchMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -36,5 +36,6 @@ export type TApiSuccessResponse<TDataType> = {
   };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PreparedResponse<T extends BaseSchema<any, any, any>> =
   TApiSuccessResponse<TApiSchema<T>>;

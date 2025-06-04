@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef, ChangeEvent } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { Search } from "shared/ui/search";
 import { cn } from "shared/lib/utils";
 
-interface SearchInputProps {
+type SearchInputProps = {
   onSearch: (value: string) => void;
   placeholder?: string;
   debounceMs?: number;
   className?: string;
-}
+};
 
 export const SearchInput = ({
   onSearch,

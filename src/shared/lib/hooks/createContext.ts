@@ -1,11 +1,11 @@
 import {
   createContext as createReactContext,
-  FC,
-  PropsWithChildren,
-  ReactNode,
   use,
   createElement,
   type Context as ReactContext,
+  type FC,
+  type PropsWithChildren,
+  type ReactNode,
 } from "react";
 
 type Hook<Name extends string, Context> = {
@@ -20,6 +20,7 @@ type Context<Name extends string, Context> = {
   [K in `${Name}Context`]: ReactContext<Context | null>;
 };
 
+// oxlint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyFunction = (props: any) => any;
 
 export function createContext<Name extends string, Builder extends AnyFunction>(

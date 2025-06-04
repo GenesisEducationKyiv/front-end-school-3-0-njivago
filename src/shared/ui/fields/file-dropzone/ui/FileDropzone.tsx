@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { cn } from "shared/lib/utils";
 import { FormField } from "../../base";
@@ -17,13 +17,10 @@ export const FileDropzone = ({
 }: FileDropzoneProps) => {
   const [isDragActive, setIsDragActive] = useState(false);
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      onFilesAccepted(acceptedFiles);
-      setIsDragActive(false);
-    },
-    [onFilesAccepted]
-  );
+  const onDrop = (acceptedFiles: File[]) => {
+    onFilesAccepted(acceptedFiles);
+    setIsDragActive(false);
+  };
 
   const { getRootProps, getInputProps, isDragReject } = useDropzone({
     onDrop,

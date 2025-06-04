@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { CreateTrackButton } from "features/create-track";
 import { EditTrackButton } from "features/edit-track";
 import { RemoveTrackButton } from "features/remove-track";
 import { tracksApi } from "shared/lib/api/main";
 import { TracksList } from "widgets/tracks-list";
-import { UploadAudioButton } from "features/upload-audio";
 import type { Track } from "entities/track";
+import { UploadAudioButton } from "features/upload-audio";
 import type { CreateTrackSchema } from "features/create-track/lib/createTrack.schema";
 
 type QueryParams = {
@@ -56,9 +56,9 @@ export const HomePage = () => {
     });
   };
 
-  const handleQueryChange = useCallback((params: QueryParams) => {
+  const handleQueryChange = (params: QueryParams) => {
     setQueryParams(params);
-  }, []);
+  };
 
   const renderTrackMenu = (track: Track) => {
     // Check if track has audio file

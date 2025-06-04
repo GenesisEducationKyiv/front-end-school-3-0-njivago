@@ -1,12 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useModal } from "shared/ui/modal/lib/ModalContext";
 import { Button } from "shared/ui/buttons/button/ui/Button";
-import type { CreateTrackProps } from "../lib/createTrack.types";
-import {
-  CreateTrackSchema,
-  createTrackSchema,
-} from "../lib/createTrack.schema";
 import { TrackForm } from "widgets/track-form";
+import { createTrackSchema } from "../lib/createTrack.schema";
+
+import type { CreateTrackProps } from "../lib/createTrack.types";
+import type { CreateTrackSchema } from "../lib/createTrack.schema";
 
 export const CreateTrackButton = ({ onSubmit }: CreateTrackProps) => {
   const { t } = useTranslation();

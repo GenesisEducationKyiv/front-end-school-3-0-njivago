@@ -1,5 +1,5 @@
 import { cn } from "shared/lib/utils";
-import { SearchProps } from "../lib/Search.type";
+import type { SearchProps } from "../lib/Search.type";
 import { SearchIcon } from "./SearchIcon";
 
 export const Search = ({ className, ...props }: SearchProps) => (

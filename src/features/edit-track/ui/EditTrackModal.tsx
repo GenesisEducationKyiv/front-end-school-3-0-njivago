@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { useModal } from "shared/ui/modal/lib/ModalContext";
 import { Button } from "shared/ui/buttons/button/ui/Button";
-import type { EditTrackProps } from "../lib/editTrack.types";
-import { EditTrackSchema, editTrackSchema } from "../lib/editTrack.schema";
 import { TrackForm } from "widgets/track-form";
+import { editTrackSchema } from "../lib/editTrack.schema";
+
+import type { EditTrackProps } from "../lib/editTrack.types";
+import type { EditTrackSchema } from "../lib/editTrack.schema";
 
 export const EditTrackButton = ({
   onSubmit,
@@ -46,9 +48,9 @@ const EditTrackForm = ({ onSubmit, initialData }: EditTrackProps) => {
       await onSubmit(data);
       setLoading(false);
       closeModal();
-    } catch (error) {
+    } catch (_) {
       setLoading(false);
-      console.error("Error updating track:", error);
+      // ToDo: add error handling by toast
     }
   };
 
