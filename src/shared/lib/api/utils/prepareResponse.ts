@@ -3,7 +3,7 @@ import { flatten, safeParse, type BaseSchema, type BaseIssue } from "valibot";
 import type { TApiSchema } from "../types/internal";
 
 const isApiResponse = <T>(value: unknown): value is TApiSuccessResponse<T> => {
-  return typeof value === "object" && value !== null && "data" in value;
+  return (typeof value === "object" || Array.isArray(value)) && value !== null;
 };
 
 export const validateResponse =
@@ -33,8 +33,9 @@ export const validateResponse =
     };
   };
 
-// oxlint-disable-next-line @typescript-eslint/no-explicit-any
-export const prepareResponse = <T extends BaseSchema<any, any, any>>(
+export const prepareResponse = <
+  T extends BaseSchema<unknown, unknown, BaseIssue<unknown>>
+>(
   schema: T,
   module: string,
   endpoint: string

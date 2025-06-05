@@ -24,22 +24,6 @@ import {
   trackSchema,
 } from "./tracks.schema";
 
-// Helper function to get all active getTracks query parameters
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getCachedTrackQueries = (state: any) => {
-  try {
-    const currentQueries = Object.entries(state.mainApi.queries || {})
-      .filter(([key]) => key.startsWith("getTracks"))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map(([_, value]: [string, any]) => value?.originalArgs)
-      .filter(Boolean);
-
-    return currentQueries.length > 0 ? currentQueries : [{}];
-  } catch (_) {
-    return [{}];
-  }
-};
-
 export const tracksApi = api.injectEndpoints({
   endpoints: (build) => ({
     getTracks: build.query<TGetTracksResponse, TGetTracksOptions>({
@@ -67,7 +51,10 @@ export const tracksApi = api.injectEndpoints({
       async onQueryStarted(_, { dispatch, queryFulfilled, getState }) {
         const { data: result } = await queryFulfilled;
 
-        const cachedQueries = getCachedTrackQueries(getState());
+        const cachedQueries = tracksApi.util.selectCachedArgsForQuery(
+          getState(),
+          "getTracks"
+        );
 
         cachedQueries.forEach((queryArg) => {
           dispatch(
@@ -87,7 +74,10 @@ export const tracksApi = api.injectEndpoints({
         const { data: result } = await queryFulfilled;
 
         if (result.data) {
-          const cachedQueries = getCachedTrackQueries(getState());
+          const cachedQueries = tracksApi.util.selectCachedArgsForQuery(
+            getState(),
+            "getTracks"
+          );
 
           cachedQueries.forEach((queryArg) => {
             dispatch(
@@ -109,7 +99,10 @@ export const tracksApi = api.injectEndpoints({
     deleteTrack: build.mutation<TDeleteTrackResponse, TDeleteTrackOptions>({
       query: createQuery("DELETE", "/tracks/:id"),
       async onQueryStarted({ params }, { dispatch, queryFulfilled, getState }) {
-        const cachedQueries = getCachedTrackQueries(getState());
+        const cachedQueries = tracksApi.util.selectCachedArgsForQuery(
+          getState(),
+          "getTracks"
+        );
 
         const patchResults = cachedQueries.map((queryArg) => {
           return dispatch(
@@ -138,7 +131,10 @@ export const tracksApi = api.injectEndpoints({
         "deleteTracks"
       ),
       async onQueryStarted({ body }, { dispatch, queryFulfilled, getState }) {
-        const cachedQueries = getCachedTrackQueries(getState());
+        const cachedQueries = tracksApi.util.selectCachedArgsForQuery(
+          getState(),
+          "getTracks"
+        );
 
         const patchResults = cachedQueries.map((queryArg) => {
           return dispatch(
@@ -181,7 +177,10 @@ export const tracksApi = api.injectEndpoints({
       async onQueryStarted({ params }, { dispatch, queryFulfilled, getState }) {
         const { data: updatedTrack } = await queryFulfilled;
 
-        const cachedQueries = getCachedTrackQueries(getState());
+        const cachedQueries = tracksApi.util.selectCachedArgsForQuery(
+          getState(),
+          "getTracks"
+        );
 
         cachedQueries.forEach((queryArg) => {
           dispatch(
@@ -218,10 +217,18 @@ export const tracksApi = api.injectEndpoints({
       TDeleteTrackFileOptions
     >({
       query: createQuery("DELETE", "/tracks/:id/file"),
+      transformResponse: prepareResponse(
+        trackSchema,
+        "tracks",
+        "deleteTrackFile"
+      ),
       async onQueryStarted({ params }, { dispatch, queryFulfilled, getState }) {
         const { data: updatedTrack } = await queryFulfilled;
 
-        const cachedQueries = getCachedTrackQueries(getState());
+        const cachedQueries = tracksApi.util.selectCachedArgsForQuery(
+          getState(),
+          "getTracks"
+        );
 
         cachedQueries.forEach((queryArg) => {
           dispatch(

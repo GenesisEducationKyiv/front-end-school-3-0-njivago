@@ -3,6 +3,12 @@
     "english": "English",
     "ukrainian": "Ukrainian"
   },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "info": "Information",
+    "warning": "Warning"
+  },
   "validation": {
     "title": {
       "required": "Title is required"
@@ -33,11 +39,13 @@
   },
   "removeTrack": {
     "button": "Delete",
-    "confirmMessage": "Are you sure you want to delete the track \"{{title}}\"? This action cannot be undone."
+    "confirmMessage": "Are you sure you want to delete the track \"{{title}}\"? This action cannot be undone.",
+    "success": "Track deleted successfully"
   },
   "createTrack": {
     "button": "Create Track",
     "modalTitle": "Create New Track",
+    "success": "Track created successfully",
     "title": {
       "label": "Track Title",
       "placeholder": "Enter track title"
@@ -67,6 +75,7 @@
   "editTrack": {
     "button": "Edit",
     "modalTitle": "Edit Track",
+    "success": "Track updated successfully",
     "title": {
       "label": "Track Title",
       "placeholder": "Enter track title"

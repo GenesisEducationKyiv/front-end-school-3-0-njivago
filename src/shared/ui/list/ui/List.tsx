@@ -5,6 +5,7 @@ import { cn } from "shared/lib/utils";
 import { Select } from "shared/ui/fields/select";
 import { useTranslation } from "react-i18next";
 import { Loader } from "shared/ui/loader";
+import { isStringOrNumber } from "shared/lib/utils/type-guards";
 import type { ListProps, SortDirection } from "../lib/List.types";
 import { Pagination } from "./Pagination";
 import { SortDropdown } from "./SortDropdown";
@@ -118,9 +119,11 @@ export const List = <T extends Record<string, unknown>>({
       const selectedIds: (string | number)[] = [];
 
       items.forEach((item) => {
-        const itemId = item[idField] as string | number;
-        newSelected[itemId] = true;
-        selectedIds.push(itemId);
+        const itemId = item[idField];
+        if (isStringOrNumber(itemId)) {
+          newSelected[itemId] = true;
+          selectedIds.push(itemId);
+        }
       });
 
       setSelected(newSelected);
@@ -141,9 +144,10 @@ export const List = <T extends Record<string, unknown>>({
         newSelected[itemId] = true;
       }
 
-      const allSelected = items.every(
-        (item) => newSelected[item[idField] as string | number]
-      );
+      const allSelected = items.every((item) => {
+        const id = item[idField];
+        return isStringOrNumber(id) && newSelected[id];
+      });
       setIsAllSelected(allSelected);
 
       if (onSelectionChange) {
@@ -273,7 +277,9 @@ export const List = <T extends Record<string, unknown>>({
         <>
           <div className="space-y-2">
             {items.map((item) => {
-              const itemId = item[idField] as string | number;
+              const itemId = item[idField];
+
+              if (!isStringOrNumber(itemId)) return;
 
               if (selectable) {
                 return (

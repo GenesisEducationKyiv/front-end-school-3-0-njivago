@@ -1,3 +1,5 @@
+import { isRecord } from "shared/lib/utils/type-guards";
+
 export const populateSearchParams = (search?: unknown) => {
   const formatSearchValue = (value: unknown): string => {
     return Array.isArray(value) ? value.join(",") : String(value);
@@ -10,8 +12,8 @@ export const populateSearchParams = (search?: unknown) => {
   };
 
   return (endpoint: string): string => {
-    if (!search) return endpoint;
-    const query = buildSearchQuery(search as Record<string, unknown>);
+    if (!isRecord(search)) return endpoint;
+    const query = buildSearchQuery(search);
     return query ? `${endpoint}?${query}` : endpoint;
   };
 };

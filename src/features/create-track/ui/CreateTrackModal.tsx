@@ -3,6 +3,7 @@ import { useModal } from "shared/ui/modal/lib/ModalContext";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { TrackForm } from "widgets/track-form";
 import { createTrackSchema } from "../lib/createTrack.schema";
+import { useToast } from "shared/ui/toast";
 
 import type { CreateTrackProps } from "../lib/createTrack.types";
 import type { CreateTrackSchema } from "../lib/createTrack.schema";
@@ -28,10 +29,16 @@ export const CreateTrackButton = ({ onSubmit }: CreateTrackProps) => {
 const CreateTrackForm = ({ onSubmit }: CreateTrackProps) => {
   const { t } = useTranslation();
   const { closeModal } = useModal();
+  const { showSuccess, showError } = useToast();
 
   const handleSubmit = async (data: CreateTrackSchema) => {
-    await onSubmit(data);
-    closeModal();
+    try {
+      await onSubmit(data);
+      showSuccess(t("createTrack.success"));
+      closeModal();
+    } catch (error) {
+      showError(error as string);
+    }
   };
 
   return (

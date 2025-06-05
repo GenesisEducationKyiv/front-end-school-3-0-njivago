@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
+import svgReactPlugin from "vite-plugin-svgr";
 import { resolve } from "path";
 
 export default defineConfig(async ({ mode }) => {
@@ -10,6 +11,7 @@ export default defineConfig(async ({ mode }) => {
     base: env.VITE_BASE_URL || "/",
     publicDir: "public",
     plugins: [
+      svgReactPlugin(),
       react({
         babel: {
           plugins: [["babel-plugin-react-compiler", { target: "19" }]],

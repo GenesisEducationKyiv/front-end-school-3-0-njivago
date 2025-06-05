@@ -97,7 +97,7 @@ export const Pagination = ({
             key={page}
             variant={currentPage === page ? "primary" : "outline"}
             size="sm"
-            onClick={() => onPageChange(page as number)}
+            onClick={() => onPageChange(Number(page))}
             className="min-w-[36px]"
           >
             {page}

@@ -1,5 +1,13 @@
 {
-  "plugins": ["react", "typescript", "react-perf", "import", "node", "oxc"],
+  "plugins": [
+    "react",
+    "typescript",
+    "react-perf",
+    "import",
+    "node",
+    "oxc",
+    "promise"
+  ],
   "env": { "browser": true, "node": true },
   "rules": {
     "no-unused-vars": [

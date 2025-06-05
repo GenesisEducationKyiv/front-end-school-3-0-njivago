@@ -33,10 +33,11 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(
     }, [value]);
 
     useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
+      const handleClickOutside = ({ target }: MouseEvent) => {
         if (
           selectRef.current &&
-          !selectRef.current.contains(event.target as Node)
+          target instanceof Node &&
+          !selectRef.current.contains(target)
         ) {
           setIsOpen(false);
         }
