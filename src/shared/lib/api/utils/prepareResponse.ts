@@ -33,7 +33,6 @@ export const validateResponse =
     };
   };
 
-// oxlint-disable-next-line @typescript-eslint/no-explicit-any
 export const prepareResponse = <
   T extends BaseSchema<unknown, unknown, BaseIssue<unknown>>
 >(

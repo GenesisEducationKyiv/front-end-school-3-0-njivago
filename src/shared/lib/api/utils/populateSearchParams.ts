@@ -12,7 +12,7 @@ export const populateSearchParams = (search?: unknown) => {
   };
 
   return (endpoint: string): string => {
-    if (!search || !isRecord(search)) return endpoint;
+    if (!isRecord(search)) return endpoint;
     const query = buildSearchQuery(search);
     return query ? `${endpoint}?${query}` : endpoint;
   };
