@@ -3,7 +3,7 @@ import { flatten, safeParse, type BaseSchema, type BaseIssue } from "valibot";
 import type { TApiSchema } from "../types/internal";
 
 const isApiResponse = <T>(value: unknown): value is TApiSuccessResponse<T> => {
-  return typeof value === "object" && value !== null && "data" in value;
+  return (typeof value === "object" || Array.isArray(value)) && value !== null;
 };
 
 export const validateResponse =

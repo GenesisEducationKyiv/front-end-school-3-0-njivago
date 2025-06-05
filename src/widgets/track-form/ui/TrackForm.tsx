@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
+import type { BaseIssue, BaseSchema } from "valibot";
 import { Input } from "shared/ui/fields/input";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import type { BaseIssue, BaseSchema } from "valibot";
 import { GenreInput } from "features/genre-input";
 
 export type TrackFormData = {

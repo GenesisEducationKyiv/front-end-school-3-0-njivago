@@ -1,2 +1,2 @@
 export * from "./ui/Button";
-export * from "./lib/Button.type";
+export * from "./lib/Button.types";
