@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { useModal } from "shared/ui/modal/lib/ModalContext";
-import { Button } from "shared/ui/buttons/button/ui/Button";
+import { useModal } from "shared/ui/modal";
+import { Button } from "shared/ui/buttons";
 import { FileDropzone } from "shared/ui/fields";
 import { Loader } from "shared/ui/loader";
 import { tracksApi } from "shared/lib/api/main";
 import { useForm } from "react-hook-form";
 import { useToast } from "shared/ui/toast";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils/network";
 
 type UploadAudioFormData = {
   file: File | null;
@@ -87,30 +88,36 @@ const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
   const handleDeleteFile = async () => {
     if (isLoading) return;
 
-    try {
-      await deleteTrackFile({ params: { id: trackId }, body: {} }).unwrap();
-      showSuccess(t("trackAudio.success.removed"));
-      onSuccess?.();
-      closeModal();
-    } catch (error) {
-      showError(error as string); // ToDo: handle errors properly
-    }
+    await handleApiRequest(
+      deleteTrackFile({ params: { id: trackId }, body: {} }).unwrap(),
+      () => {
+        showSuccess(t("trackAudio.success.removed"));
+        onSuccess?.();
+        closeModal();
+      },
+      (error) => {
+        showError(getErrorMessage(error));
+      }
+    );
   };
 
   const onSubmit = async (data: UploadAudioFormData) => {
     if (!data.file || isLoading) return;
 
-    try {
-      await uploadTrackAudio({
+    await handleApiRequest(
+      uploadTrackAudio({
         params: { id: trackId },
         body: { file: data.file },
-      }).unwrap();
-      showSuccess(t("trackAudio.success.uploaded"));
-      onSuccess?.();
-      closeModal();
-    } catch (error) {
-      showError(error as string); // ToDo: handle errors properly
-    }
+      }).unwrap(),
+      () => {
+        showSuccess(t("trackAudio.success.uploaded"));
+        onSuccess?.();
+        closeModal();
+      },
+      (error) => {
+        showError(getErrorMessage(error));
+      }
+    );
   };
 
   if (isLoading) {

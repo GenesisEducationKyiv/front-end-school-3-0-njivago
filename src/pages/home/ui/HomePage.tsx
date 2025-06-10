@@ -8,6 +8,7 @@ import { TracksList } from "widgets/tracks-list";
 import type { Track } from "entities/track";
 import { UploadAudioButton } from "features/upload-audio";
 import type { CreateTrackSchema } from "features/create-track/lib/createTrack.schema";
+import type { EditTrackSchema } from "features/edit-track";
 
 type QueryParams = {
   page?: number;
@@ -38,7 +39,7 @@ export const HomePage = () => {
   const [updateTrack] = tracksApi.useUpdateTrackMutation();
   const [deleteTracks] = tracksApi.useDeleteTracksMutation();
 
-  const handleCreateTrack = async (data: CreateTrackSchema) => {
+  const handleCreateTrack = async (data: CreateTrackSchema) =>
     await createTrack({
       body: {
         title: data.title,
@@ -47,8 +48,19 @@ export const HomePage = () => {
         genres: data.genres,
         coverImage: data.coverUrl || "",
       },
-    });
-  };
+    }).unwrap();
+
+  const handleUpdateTrack = async (trackId: string, data: EditTrackSchema) =>
+    await updateTrack({
+      params: { id: trackId },
+      body: {
+        title: data.title,
+        artist: data.artist,
+        album: data.album,
+        genres: data.genres,
+        coverImage: data.coverUrl || "",
+      },
+    }).unwrap();
 
   const handleBulkDelete = async (trackIds: string[]) => {
     await deleteTracks({
@@ -67,18 +79,7 @@ export const HomePage = () => {
     return (
       <div className="flex items-center gap-2">
         <EditTrackButton
-          onSubmit={(data) =>
-            updateTrack({
-              params: { id: track.id },
-              body: {
-                title: data.title,
-                artist: data.artist,
-                album: data.album,
-                genres: data.genres,
-                coverImage: data.coverUrl || "",
-              },
-            })
-          }
+          onSubmit={(data) => handleUpdateTrack(track.id, data)}
           initialData={{
             title: track.title,
             artist: track.artist,
