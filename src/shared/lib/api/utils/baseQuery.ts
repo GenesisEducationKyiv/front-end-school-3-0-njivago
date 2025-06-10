@@ -1,7 +1,14 @@
+import * as Belt from "@mobily/ts-belt";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import type { TFetchMethod } from "../types";
 import { populateParams } from "./populateParams";
 import { populateSearchParams } from "./populateSearchParams";
+
+const isResponseData = (responseData: unknown) =>
+  responseData &&
+  typeof responseData === "object" &&
+  !Array.isArray(responseData) &&
+  ("data" in responseData || "meta" in responseData);
 
 export const baseQuery =
   (
@@ -20,90 +27,83 @@ export const baseQuery =
     unknown
   > =>
   async (options) => {
-    try {
-      const {
-        url = "",
-        method = "GET",
-        search = undefined,
-        params = undefined,
-        body = undefined,
-        headers: customHeaders = {},
-      } = options;
+    const {
+      url = "",
+      method = "GET",
+      search = undefined,
+      params = undefined,
+      body = undefined,
+      headers: customHeaders = {},
+    } = options;
 
-      const preparedEndpoint = (endpoint: string) => {
-        let result = endpoint;
-        if (params) {
-          result = populateParams(params)(result);
-        }
-        if (search) {
-          result = populateSearchParams(search)(result);
-        }
-        return result;
-      };
+    const preparedEndpoint = (endpoint: string) => {
+      let result = endpoint;
+      if (params) {
+        result = populateParams(params)(result);
+      }
+      if (search) {
+        result = populateSearchParams(search)(result);
+      }
+      return result;
+    };
 
-      const preparedUrl = `${baseUrl}${preparedEndpoint(url)}`;
+    const preparedUrl = `${baseUrl}${preparedEndpoint(url)}`;
 
-      // Don't stringify FormData bodies
-      const preparedBody =
-        body instanceof FormData
-          ? body
-          : body
-          ? JSON.stringify(body)
-          : undefined;
+    // Don't stringify FormData bodies
+    const preparedBody =
+      body instanceof FormData ? body : body ? JSON.stringify(body) : undefined;
 
-      const headers: Record<string, string> = {
-        ...(!(body instanceof FormData) && {
-          "Content-Type": "application/json",
-        }),
-        ...customHeaders,
-      };
+    const headers: Record<string, string> = {
+      ...(!(body instanceof FormData) && {
+        "Content-Type": "application/json",
+      }),
+      ...customHeaders,
+    };
 
-      const response = await fetch(preparedUrl, {
+    const fetchResult = await Belt.R.fromPromise(
+      fetch(preparedUrl, {
         method,
         headers,
         body: preparedBody,
-      }).catch((error) => {
-        throw new Error(error.message);
-      });
+      })
+    );
 
-      if (!response.ok) {
-        let errorData;
-        try {
-          errorData = await response.json();
-        } catch {
-          errorData = { error: response.statusText };
-        }
+    if (Belt.R.isError(fetchResult)) {
+      const error = Belt.R.getExn(Belt.R.flip(fetchResult));
 
-        return {
-          error: {
-            status: response.status,
-            data: errorData,
-          },
-        };
-      }
-
-      const responseData = await response.json().catch((error) => {
-        // eslint-disable-next-line no-console -- necessary
-        console.error("JSON parse error:", error);
-        return null;
-      });
-
-      if (
-        responseData &&
-        typeof responseData === "object" &&
-        !Array.isArray(responseData)
-      ) {
-        if ("data" in responseData || "meta" in responseData) {
-          return { data: responseData };
-        }
-      }
-
-      return {
-        data: responseData,
-      };
-    } catch (error) {
       return {
         error: error instanceof Error ? error.message : String(error),
       };
     }
+
+    const response = Belt.R.getExn(fetchResult);
+
+    if (!response.ok) {
+      const errorDataResult = await Belt.R.fromPromise(
+        response.json().catch(() => ({ error: response.statusText }))
+      );
+
+      const errorData = Belt.R.getWithDefault(errorDataResult, {
+        error: response.statusText,
+      });
+
+      return {
+        error: {
+          status: response.status,
+          data: errorData,
+        },
+      };
+    }
+
+    const jsonResult = await Belt.R.fromPromise(response.json());
+
+    const responseData = Belt.R.getWithDefault(jsonResult, null);
+
+    if (isResponseData(responseData)) {
+      return { data: responseData };
+    }
+
+    return {
+      data: responseData,
+    };
   };

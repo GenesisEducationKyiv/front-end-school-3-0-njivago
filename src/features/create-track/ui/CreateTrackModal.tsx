@@ -7,6 +7,7 @@ import { useToast } from "shared/ui/toast";
 
 import type { CreateTrackProps } from "../lib/createTrack.types";
 import type { CreateTrackSchema } from "../lib/createTrack.schema";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils/network";
 
 export const CreateTrackButton = ({ onSubmit }: CreateTrackProps) => {
   const { t } = useTranslation();
@@ -32,13 +33,16 @@ const CreateTrackForm = ({ onSubmit }: CreateTrackProps) => {
   const { showSuccess, showError } = useToast();
 
   const handleSubmit = async (data: CreateTrackSchema) => {
-    try {
-      await onSubmit(data);
-      showSuccess(t("createTrack.success"));
-      closeModal();
-    } catch (error) {
-      showError(error as string);
-    }
+    await handleApiRequest(
+      onSubmit(data),
+      () => {
+        showSuccess(t("createTrack.success"));
+        closeModal();
+      },
+      (error) => {
+        showError(getErrorMessage(error));
+      }
+    );
   };
 
   return (
