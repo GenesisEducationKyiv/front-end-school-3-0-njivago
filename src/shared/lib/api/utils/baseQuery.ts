@@ -5,12 +5,6 @@ import type { TFetchMethod } from "../types";
 import { populateParams } from "./populateParams";
 import { populateSearchParams } from "./populateSearchParams";
 
-const isResponseData = (responseData: unknown) =>
-  responseData &&
-  typeof responseData === "object" &&
-  !Array.isArray(responseData) &&
-  ("data" in responseData || "meta" in responseData);
-
 export const baseQuery =
   (
     { baseUrl }: { baseUrl?: string } = { baseUrl: "" }
@@ -99,10 +93,6 @@ export const baseQuery =
     const jsonResult = await Belt.R.fromPromise(response.json());
 
     const responseData = Belt.R.getWithDefault(jsonResult, null);
-
-    if (isResponseData(responseData)) {
-      return { data: responseData };
-    }
 
     return {
       data: responseData,
