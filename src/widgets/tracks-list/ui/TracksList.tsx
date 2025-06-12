@@ -2,15 +2,28 @@ import { useState, useEffect } from "react";
 import { TrackCard } from "shared/ui/track-card";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { useTranslation } from "react-i18next";
-import { List, type SortOption, type FilterGroup } from "shared/ui/list";
+import { List } from "shared/ui/list";
 import { useActionConfirmation } from "widgets/action-confirmation";
+import type { SortOption, FilterGroup } from "shared/ui/list";
 import type { TracksListProps } from "../lib/TracksList.types";
 import type { Track } from "entities/track";
 import type { SortDirection } from "shared/ui/list/lib/List.types";
 import { genresApi } from "shared/lib/api/main/genres/genres.api";
 import type { TGenresApi } from "shared/lib/api/main";
+import { useSearchParamsState } from "shared/lib/hooks";
 
 const DEFAULT_COVER = "https://placehold.co/400x400?text=No+Cover";
+
+type TSortParams = "title" | "artist" | "album" | "createdAt";
+
+type TSearchParams = {
+  page: number;
+  limit: number;
+  sort: TSortParams | undefined;
+  order: SortDirection | undefined;
+  search: string | undefined;
+  genre: string | undefined;
+};
 
 // ToDo: optimize and improve the list, it was developed in a rush
 
@@ -24,16 +37,15 @@ export const TracksList = ({
   onQueryChange,
 }: TracksListProps) => {
   const { t } = useTranslation();
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortField, setSortField] = useState<
-    "title" | "artist" | "album" | "createdAt"
-  >();
-  const [sortDirection, setSortDirection] = useState<SortDirection>();
-  const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>(
-    {}
-  );
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchParams, updateSearchParams, removeSearchParams } =
+    useSearchParamsState<TSearchParams>({
+      keys: ["page", "limit", "sort", "order", "search", "genre"],
+      defaultValues: {
+        page: 1,
+        limit: 10,
+      },
+    });
+
   const [selectedTrackIds, setSelectedTrackIds] = useState<string[]>([]);
 
   const { data: genresResponse } = genresApi.useGetGenresQuery();
@@ -63,53 +75,66 @@ export const TracksList = ({
   useEffect(() => {
     if (onQueryChange) {
       let genre: string | undefined;
-      if (activeFilters.genres?.length) {
-        genre = activeFilters.genres[0];
+      if (searchParams.genre) {
+        genre = searchParams.genre;
       }
 
       onQueryChange({
-        page,
-        limit,
-        ...(searchQuery ? { search: searchQuery } : {}),
+        page: searchParams.page,
+        limit: searchParams.limit,
+        ...(searchParams.search ? { search: searchParams.search } : {}),
         ...(genre ? { genre } : {}),
-        ...(sortField ? { sort: sortField } : {}),
-        ...(sortDirection ? { order: sortDirection } : {}),
+        ...(searchParams.sort ? { sort: searchParams.sort } : {}),
+        ...(searchParams.order ? { order: searchParams.order } : {}),
       });
     }
-  }, [
-    page,
-    limit,
-    sortField,
-    sortDirection,
-    activeFilters,
-    searchQuery,
-    onQueryChange,
-    activeFilters.length,
-  ]);
+  }, [searchParams, onQueryChange]);
 
   const handleSortChange = (field: keyof Track, direction: SortDirection) => {
     if (field === "title" || field === "artist" || field === "album") {
-      setSortField(field);
+      updateSearchParams({
+        sort: field,
+        order: direction,
+        page: 1,
+      });
     } else if (field === "createdAt") {
-      setSortField("createdAt");
+      updateSearchParams({
+        sort: "createdAt",
+        order: direction,
+        page: 1,
+      });
     }
-    setSortDirection(direction);
-    setPage(1);
   };
 
   const handleFilterChange = (filters: Record<string, string[]>) => {
-    setActiveFilters(filters);
-    setPage(1);
+    if (filters.genres?.length) {
+      updateSearchParams({
+        genre: filters.genres[0],
+        page: 1,
+      });
+    } else {
+      removeSearchParams(["genre"]);
+      updateSearchParams({ page: 1 });
+    }
   };
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    setPage(1);
+    if (query) {
+      updateSearchParams({
+        search: query,
+        page: 1,
+      });
+    } else {
+      removeSearchParams(["search"]);
+      updateSearchParams({ page: 1 });
+    }
   };
 
   const handlePageSizeChange = (newLimit: number) => {
-    setLimit(newLimit);
-    setPage(1);
+    updateSearchParams({
+      limit: newLimit,
+      page: 1,
+    });
   };
 
   const handleSelectionChange = (selectedIds: (string | number)[]) => {
@@ -161,20 +186,25 @@ export const TracksList = ({
       renderItem={renderTrack}
       emptyMessage={t("tracks.empty")}
       className={className}
-      page={page}
-      pageSize={limit}
+      page={searchParams.page}
+      pageSize={searchParams.limit}
       totalItems={totalItems}
-      onPageChange={setPage}
+      onPageChange={(newPage) => {
+        updateSearchParams({ page: newPage });
+      }}
       onPageSizeChange={handlePageSizeChange}
       pageSizeOptions={[5, 10, 20, 50, 100]}
       sortOptions={sortOptions}
-      initialSort={sortField}
-      initialSortDirection={sortDirection}
+      initialSort={searchParams.sort}
+      initialSortDirection={searchParams.order}
       onSortChange={handleSortChange}
       filterGroups={filterGroups}
-      initialFilters={activeFilters}
+      initialFilters={
+        searchParams.genre ? { genres: [searchParams.genre] } : { genres: [] }
+      }
       onFilterChange={handleFilterChange}
       searchPlaceholder={t("tracks.search")}
+      searchValue={searchParams.search}
       onSearch={handleSearch}
       selectable={!!onDeleteTracks}
       onSelectionChange={handleSelectionChange}

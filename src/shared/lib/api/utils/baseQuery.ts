@@ -1,5 +1,6 @@
 import * as Belt from "@mobily/ts-belt";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query/react";
+import { getErrorMessage } from "shared/lib/utils";
 import type { TFetchMethod } from "../types";
 import { populateParams } from "./populateParams";
 import { populateSearchParams } from "./populateSearchParams";
@@ -72,7 +73,7 @@ export const baseQuery =
       const error = Belt.R.getExn(Belt.R.flip(fetchResult));
 
       return {
-        error: error instanceof Error ? error.message : String(error),
+        error: getErrorMessage(error),
       };
     }
 

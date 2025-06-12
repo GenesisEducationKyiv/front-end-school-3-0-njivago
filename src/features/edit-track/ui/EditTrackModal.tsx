@@ -7,7 +7,7 @@ import { editTrackSchema } from "../lib/editTrack.schema";
 import type { EditTrackProps } from "../lib/editTrack.types";
 import type { EditTrackSchema } from "../lib/editTrack.schema";
 import { useToast } from "shared/ui/toast";
-import { getErrorMessage, handleApiRequest } from "shared/lib/utils/network";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
 
 export const EditTrackButton = ({
   onSubmit,
