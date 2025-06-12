@@ -39,6 +39,7 @@ export type ListProps<T = unknown> = {
   initialFilters?: Record<string, string[]>;
   onFilterChange?: (filters: Record<string, string[]>) => void;
   searchPlaceholder?: string;
+  searchValue?: string;
   onSearch?: (query: string) => void;
   selectable?: boolean;
   onSelectionChange?: (selectedIds: (string | number)[]) => void;

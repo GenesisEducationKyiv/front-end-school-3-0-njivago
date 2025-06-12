@@ -5,7 +5,7 @@ import { cn } from "shared/lib/utils";
 import { Select } from "shared/ui/fields/select";
 import { useTranslation } from "react-i18next";
 import { Loader } from "shared/ui/loader";
-import { isStringOrNumber } from "shared/lib/utils/type-guards";
+import { isStringOrNumber } from "shared/lib/utils";
 import type { ListProps, SortDirection } from "../lib/List.types";
 import { Pagination } from "./Pagination";
 import { SortDropdown } from "./SortDropdown";
@@ -38,6 +38,7 @@ export const List = <T extends Record<string, unknown>>({
   onSelectionChange,
   bulkActions,
   isLoading = false,
+  searchValue,
 }: ListProps<T>) => {
   const { t } = useTranslation();
   const defaultEmptyMessage = t("list.emptyMessage");
@@ -202,6 +203,7 @@ export const List = <T extends Record<string, unknown>>({
               onSearch={handleSearch}
               placeholder={searchPlaceholder}
               className="max-w-xs"
+              value={searchValue}
             />
           )}
 

@@ -1,4 +1,4 @@
-import { isRecord } from "shared/lib/utils/type-guards";
+import { isRecord } from "shared/lib/utils";
 
 export const populateSearchParams = (search?: unknown) => {
   const formatSearchValue = (value: unknown): string => {

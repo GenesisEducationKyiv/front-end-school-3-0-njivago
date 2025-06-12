@@ -4,7 +4,7 @@ import { genresApi } from "shared/lib/api/main";
 import { useTranslation } from "react-i18next";
 import { cn } from "shared/lib/utils";
 import type { GenreInputProps } from "../lib/genreInput.types";
-import { isStringArray } from "shared/lib/utils/type-guards";
+import { isStringArray } from "shared/lib/utils";
 
 const Tag = ({
   tag,

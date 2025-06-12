@@ -7,7 +7,7 @@ import { useToast } from "shared/ui/toast";
 
 import type { CreateTrackProps } from "../lib/createTrack.types";
 import type { CreateTrackSchema } from "../lib/createTrack.schema";
-import { getErrorMessage, handleApiRequest } from "shared/lib/utils/network";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
 
 export const CreateTrackButton = ({ onSubmit }: CreateTrackProps) => {
   const { t } = useTranslation();

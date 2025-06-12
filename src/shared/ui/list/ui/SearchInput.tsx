@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, type ChangeEvent } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { ChangeEvent } from "react";
 import { Search } from "shared/ui/search";
 import { cn } from "shared/lib/utils";
 
@@ -7,6 +8,7 @@ type SearchInputProps = {
   placeholder?: string;
   debounceMs?: number;
   className?: string;
+  value?: string;
 };
 
 export const SearchInput = ({
@@ -14,8 +16,9 @@ export const SearchInput = ({
   placeholder = "Search...",
   debounceMs = 300,
   className,
+  value: initialValue = "",
 }: SearchInputProps) => {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState(initialValue);
   const debounceTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -25,6 +28,10 @@ export const SearchInput = ({
       }
     };
   }, []);
+
+  useEffect(() => {
+    setSearchValue(initialValue);
+  }, [initialValue]);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
