@@ -6,7 +6,7 @@ import { Loader } from "shared/ui/loader";
 import { tracksApi } from "shared/lib/api/main";
 import { useForm } from "react-hook-form";
 import { useToast } from "shared/ui/toast";
-import { getErrorMessage, handleApiRequest } from "shared/lib/utils/network";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
 
 type UploadAudioFormData = {
   file: File | null;

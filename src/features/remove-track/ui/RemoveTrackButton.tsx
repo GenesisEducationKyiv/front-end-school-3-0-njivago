@@ -4,7 +4,7 @@ import { tracksApi } from "shared/lib/api/main";
 import { useActionConfirmation } from "widgets/action-confirmation";
 import { useToast } from "shared/ui/toast";
 import type { RemoveTrackProps } from "../lib/removeTrack.types";
-import { getErrorMessage, handleApiRequest } from "shared/lib/utils/network";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
 
 export const RemoveTrackButton = ({
   trackId,

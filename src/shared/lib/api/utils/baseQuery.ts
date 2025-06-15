@@ -1,14 +1,9 @@
 import * as Belt from "@mobily/ts-belt";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query/react";
+import { getErrorMessage } from "shared/lib/utils";
 import type { TFetchMethod } from "../types";
 import { populateParams } from "./populateParams";
 import { populateSearchParams } from "./populateSearchParams";
-
-const isResponseData = (responseData: unknown) =>
-  responseData &&
-  typeof responseData === "object" &&
-  !Array.isArray(responseData) &&
-  ("data" in responseData || "meta" in responseData);
 
 export const baseQuery =
   (
@@ -72,7 +67,7 @@ export const baseQuery =
       const error = Belt.R.getExn(Belt.R.flip(fetchResult));
 
       return {
-        error: error instanceof Error ? error.message : String(error),
+        error: getErrorMessage(error),
       };
     }
 
@@ -98,10 +93,6 @@ export const baseQuery =
     const jsonResult = await Belt.R.fromPromise(response.json());
 
     const responseData = Belt.R.getWithDefault(jsonResult, null);
-
-    if (isResponseData(responseData)) {
-      return { data: responseData };
-    }
 
     return {
       data: responseData,
