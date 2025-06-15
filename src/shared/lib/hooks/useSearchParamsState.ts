@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getSearchParams,
   setSearchParams,
-  removeSearchParams,
+  removeSearchParams as deleteSearchParams,
 } from "../utils/url";
 import type { PartialRecord } from "../types";
 
@@ -38,7 +38,7 @@ export const useSearchParamsState = <T extends PartialRecord<string, unknown>>({
 
     setSearchParams(params);
     if (paramsToRemove.length > 0) {
-      removeSearchParams(paramsToRemove);
+      deleteSearchParams(paramsToRemove);
     }
   }, [searchParams, keys]);
 
@@ -49,7 +49,7 @@ export const useSearchParamsState = <T extends PartialRecord<string, unknown>>({
     }));
   };
 
-  const removeParams = (keysToRemove: Array<keyof T & string>) => {
+  const removeSearchParams = (keysToRemove: Array<keyof T & string>) => {
     setSearchParamsState((prev) => {
       const newState = { ...prev };
       keysToRemove.forEach((key) => {
@@ -66,7 +66,7 @@ export const useSearchParamsState = <T extends PartialRecord<string, unknown>>({
   return {
     searchParams,
     updateSearchParams,
-    removeSearchParams: removeParams,
+    removeSearchParams,
     clearSearchParams,
   };
 };
