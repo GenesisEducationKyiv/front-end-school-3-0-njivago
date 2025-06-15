@@ -1,0 +1,41 @@
+name: "Setup Node.js and pnpm"
+description: "Sets up Node.js and pnpm with caching"
+
+inputs:
+  node-version:
+    description: "Node.js version to use"
+    required: true
+  pnpm-version:
+    description: "pnpm version to use"
+    required: true
+    default: "8.14.2"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+        run_install: false
+
+    - name: Setup pnpm config
+      shell: bash
+      run: pnpm config set store-dir "$PNPM_CACHE_FOLDER"
+
+    - name: Verify PNPM Cache Directory
+      shell: bash
+      run: |
+        PNPM_STORE_PATH="$( pnpm store path --silent )"
+        if [ ! -d "$PNPM_STORE_PATH" ]; then
+          echo "PNPM store directory does not exist, creating it."
+          mkdir -p "$PNPM_STORE_PATH"
+        else
+          echo "PNPM store directory exists."
+        fi
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: "pnpm"
