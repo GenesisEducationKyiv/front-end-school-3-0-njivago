@@ -7,6 +7,7 @@ import { editTrackSchema } from "../lib/editTrack.schema";
 import type { EditTrackProps } from "../lib/editTrack.types";
 import type { EditTrackSchema } from "../lib/editTrack.schema";
 import { useToast } from "shared/ui/toast";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
 
 export const EditTrackButton = ({
   onSubmit,
@@ -45,13 +46,16 @@ const EditTrackForm = ({ onSubmit, initialData }: EditTrackProps) => {
   const { showError, showSuccess } = useToast();
 
   const handleSubmit = async (data: EditTrackSchema) => {
-    try {
-      await onSubmit(data);
-      showSuccess(t("editTrack.success"));
-      closeModal();
-    } catch (error) {
-      showError(error as string); // ToDo: handle errors properly
-    }
+    await handleApiRequest(
+      onSubmit(data),
+      () => {
+        showSuccess(t("editTrack.success"));
+        closeModal();
+      },
+      (error) => {
+        showError(getErrorMessage(error));
+      }
+    );
   };
 
   return (

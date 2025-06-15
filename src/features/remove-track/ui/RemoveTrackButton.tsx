@@ -4,6 +4,7 @@ import { tracksApi } from "shared/lib/api/main";
 import { useActionConfirmation } from "widgets/action-confirmation";
 import { useToast } from "shared/ui/toast";
 import type { RemoveTrackProps } from "../lib/removeTrack.types";
+import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
 
 export const RemoveTrackButton = ({
   trackId,
@@ -16,18 +17,22 @@ export const RemoveTrackButton = ({
   const { showSuccess, showError } = useToast();
 
   const handleDelete = async () => {
-    try {
-      await deleteTrack({
+    await handleApiRequest(
+      deleteTrack({
         params: { id: trackId },
         body: {},
-      });
-      showSuccess(t("removeTrack.success"));
-      if (onRemoveSuccess) {
-        onRemoveSuccess();
+      }).unwrap(),
+      () => {
+        showSuccess(t("removeTrack.success"));
+
+        if (onRemoveSuccess) {
+          onRemoveSuccess();
+        }
+      },
+      (error) => {
+        showError(getErrorMessage(error));
       }
-    } catch (error) {
-      showError(error as string); // ToDo: handle errors properly
-    }
+    );
   };
 
   const handleClick = () => {
