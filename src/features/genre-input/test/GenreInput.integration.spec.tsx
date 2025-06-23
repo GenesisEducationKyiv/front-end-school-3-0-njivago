@@ -147,10 +147,10 @@ test("should submit form with selected genres", async ({
 
   await input.focus();
   await input.fill("Rock");
-  await input.press("Enter");
+  await component.getByText("Rock").click();
 
   await input.fill("Jazz");
-  await input.press("Enter");
+  await component.getByText("Jazz").click();
 
   await component.getByTestId("submit-button").click();
 
