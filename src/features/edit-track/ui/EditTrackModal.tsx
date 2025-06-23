@@ -30,7 +30,7 @@ export const EditTrackButton = ({
 
   return (
     <Button
-      testId={`edit-track-${trackId}`}
+      testId="edit-track"
       variant="outline"
       size="sm"
       onClick={handleOpenModal}

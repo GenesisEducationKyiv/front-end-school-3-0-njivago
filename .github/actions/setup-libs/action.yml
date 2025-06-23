@@ -1,5 +1,5 @@
-name: "Setup Node.js and pnpm"
-description: "Sets up Node.js and pnpm with caching"
+name: "Setup Node.js, pnpm and install dependencies"
+description: "Sets up Node.js, pnpm with caching and install dependencies"
 
 inputs:
   node-version:
@@ -39,3 +39,5 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: "pnpm"
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile

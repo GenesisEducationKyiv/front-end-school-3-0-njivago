@@ -42,7 +42,7 @@ export const baseQuery =
       return result;
     };
 
-    const preparedUrl = `${baseUrl}${preparedEndpoint(url)}`;
+    const preparedUrl = `${baseUrl || "api"}${preparedEndpoint(url)}`;
 
     // Don't stringify FormData bodies
     const preparedBody =

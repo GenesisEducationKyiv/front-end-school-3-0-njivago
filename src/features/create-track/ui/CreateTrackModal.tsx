@@ -27,7 +27,7 @@ export const CreateTrackButton = ({ onSubmit }: CreateTrackProps) => {
   );
 };
 
-const CreateTrackForm = ({ onSubmit }: CreateTrackProps) => {
+export const CreateTrackForm = ({ onSubmit }: CreateTrackProps) => {
   const { t } = useTranslation();
   const { closeModal } = useModal();
   const { showSuccess, showError } = useToast();

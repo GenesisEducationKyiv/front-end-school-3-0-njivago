@@ -127,7 +127,9 @@ export const TrackForm = ({
         <Button variant="outline" type="button" onClick={onCancel}>
           {fieldLabels.cancel}
         </Button>
-        <Button type="submit">{submitLabel}</Button>
+        <Button data-testid="submit-button" type="submit">
+          {submitLabel}
+        </Button>
       </div>
     </form>
   );

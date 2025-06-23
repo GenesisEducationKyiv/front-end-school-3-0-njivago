@@ -11,3 +11,9 @@ node_modules
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
