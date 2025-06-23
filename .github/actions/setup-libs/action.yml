@@ -39,5 +39,3 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: "pnpm"
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
