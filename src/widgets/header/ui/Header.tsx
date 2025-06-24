@@ -1,7 +1,8 @@
 import { LanguageSwitcher } from "widgets/language-switcher";
+import { ThemeToggle } from "widgets/theme-toggle";
 
 export const Header = () => (
-  <header className="bg-white shadow-sm">
+  <header className="bg-white dark:bg-gray-900 shadow-sm">
     <div className="container mx-auto py-4 flex items-center justify-between">
       <div className="flex items-center">
         <div className="w-10 h-10 mr-3 relative">
@@ -28,7 +29,10 @@ export const Header = () => (
           TrackFlow
         </h1>
       </div>
-      <LanguageSwitcher />
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        <LanguageSwitcher />
+      </div>
     </div>
   </header>
 );

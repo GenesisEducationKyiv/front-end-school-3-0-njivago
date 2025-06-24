@@ -25,7 +25,7 @@ export const Button = ({
           "bg-muted text-text hover:bg-muted/90": variant === "secondary",
           "border border-subtext/20 text-text hover:bg-muted":
             variant === "outline",
-          "p-2 text-text hover:bg-muted": isIconVariant,
+          "p-2 text-text bg-muted": isIconVariant,
           "px-3 py-1.5 text-sm": size === "sm" && !isIconVariant,
           "px-4 py-2": size === "md" && !isIconVariant,
           "px-6 py-3 text-lg": size === "lg" && !isIconVariant,

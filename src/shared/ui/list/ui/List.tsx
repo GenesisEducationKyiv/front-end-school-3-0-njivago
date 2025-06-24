@@ -235,7 +235,7 @@ export const List = <T extends Record<string, unknown>>({
                 )}
                 value={currentPageSize.toString()}
                 onChange={(value) => handlePageSizeChange(Number(value))}
-                className="w-20"
+                className="w-20 text-black"
               />
             </div>
           )}
