@@ -1,5 +1,5 @@
-name: "Setup Node.js, pnpm and install dependencies"
-description: "Sets up Node.js, pnpm with caching and install dependencies"
+name: "Setup Node.js and pnpm"
+description: "Sets up Node.js and pnpm with caching"
 
 inputs:
   node-version:

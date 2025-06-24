@@ -1,12 +1,11 @@
-// oxlint-disable
 import { test as base, expect } from "@playwright/experimental-ct-react";
-import type { HooksConfig } from "shared/lib/tests/ct";
-import { TestWrapper } from "./GenreInput.story";
 import { mockedGenres } from "shared/lib/tests/fixtures";
+import { TestWrapper } from "./GenreInput.story";
 
 const test = base.extend<{
   mockGenres: () => Promise<void>;
 }>({
+  // oxlint-disable-next-line rules-of-hooks -- due to conflict with playwright use
   mockGenres: async ({ page }, use) => {
     const mockGenresHandler = async () => {
       await page.route("**/api/genres", (route) => {
@@ -26,9 +25,7 @@ const test = base.extend<{
 test("should render with empty state", async ({ mount, mockGenres }) => {
   await mockGenres();
 
-  const component = await mount<HooksConfig>(<TestWrapper />, {
-    hooksConfig: { withTranslations: true },
-  });
+  const component = await mount(<TestWrapper />);
 
   await expect(component.getByTestId("genre-input")).toBeVisible();
   await expect(component.getByText("Test Genres")).toBeVisible();
@@ -44,10 +41,7 @@ test("should display existing genres as tags", async ({
   await mockGenres();
 
   const initialGenres = ["Rock", "Jazz"];
-  const component = await mount<HooksConfig>(
-    <TestWrapper initialGenres={initialGenres} />,
-    { hooksConfig: { withTranslations: true } }
-  );
+  const component = await mount(<TestWrapper initialGenres={initialGenres} />);
 
   await expect(component.getByText("Rock")).toBeVisible();
   await expect(component.getByText("Jazz")).toBeVisible();
@@ -56,9 +50,7 @@ test("should display existing genres as tags", async ({
 test("should show suggestions when typing", async ({ mount, mockGenres }) => {
   await mockGenres();
 
-  const component = await mount<HooksConfig>(<TestWrapper />, {
-    hooksConfig: { withTranslations: true },
-  });
+  const component = await mount(<TestWrapper />);
 
   const input = component.getByTestId("genre-input");
   await input.focus();
@@ -75,10 +67,7 @@ test("should remove genre tag when clicking remove button", async ({
   await mockGenres();
 
   const initialGenres = ["Rock", "Jazz"];
-  const component = await mount<HooksConfig>(
-    <TestWrapper initialGenres={initialGenres} />,
-    { hooksConfig: { withTranslations: true } }
-  );
+  const component = await mount(<TestWrapper initialGenres={initialGenres} />);
 
   const rockTag = component.getByText("Rock").locator("..");
   await rockTag.getByRole("button").click();
@@ -91,9 +80,7 @@ test("should remove genre tag when clicking remove button", async ({
 test("should not add duplicate genres", async ({ mount, mockGenres }) => {
   await mockGenres();
 
-  const component = await mount<HooksConfig>(<TestWrapper />, {
-    hooksConfig: { withTranslations: true },
-  });
+  const component = await mount(<TestWrapper />);
 
   const input = component.getByTestId("genre-input");
 
@@ -115,9 +102,7 @@ test("should show no results message for non-matching search", async ({
 }) => {
   await mockGenres();
 
-  const component = await mount<HooksConfig>(<TestWrapper />, {
-    hooksConfig: { withTranslations: true },
-  });
+  const component = await mount(<TestWrapper />);
 
   const input = component.getByTestId("genre-input");
   await input.focus();
@@ -134,13 +119,12 @@ test("should submit form with selected genres", async ({
 
   let submittedData: { genres: string[] } | null = null;
 
-  const component = await mount<HooksConfig>(
+  const component = await mount(
     <TestWrapper
       onSubmit={(data) => {
         submittedData = data;
       }}
-    />,
-    { hooksConfig: { withTranslations: true } }
+    />
   );
 
   const input = component.getByTestId("genre-input");
@@ -160,9 +144,7 @@ test("should submit form with selected genres", async ({
 test("should handle case-insensitive search", async ({ mount, mockGenres }) => {
   await mockGenres();
 
-  const component = await mount<HooksConfig>(<TestWrapper />, {
-    hooksConfig: { withTranslations: true },
-  });
+  const component = await mount(<TestWrapper />);
 
   const input = component.getByTestId("genre-input");
   await input.focus();
@@ -177,9 +159,7 @@ test("should clear suggestions when input is cleared", async ({
 }) => {
   await mockGenres();
 
-  const component = await mount<HooksConfig>(<TestWrapper />, {
-    hooksConfig: { withTranslations: true },
-  });
+  const component = await mount(<TestWrapper />);
 
   const input = component.getByTestId("genre-input");
   await input.focus();
@@ -195,9 +175,7 @@ test("should clear suggestions when input is cleared", async ({
 test("should show required indicator when required prop is true", async ({
   mount,
 }) => {
-  const component = await mount<HooksConfig>(<TestWrapper />, {
-    hooksConfig: { withTranslations: true },
-  });
+  const component = await mount(<TestWrapper />);
 
   await expect(component.getByText("*")).toBeVisible();
 });

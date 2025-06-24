@@ -1,23 +1,37 @@
 import { expect } from "@playwright/test";
 import { test, mockedTracks } from "shared/lib/tests/fixtures";
 
-test("should display mocked tracks", async ({ page, mockTracks }) => {
-  await mockTracks();
+const DEFAULT_TIMEOUT = 500;
 
-  await page.waitForTimeout(500);
-  const tracks = await page.getByTestId("track-item").all();
-  expect(tracks.length).toBe(
-    mockedTracks.length < 10 ? mockedTracks.length : 10
-  );
-  await expect(page.getByText("Test Track 1")).toBeVisible();
-});
-
-test("should edit a track and update the list", async ({
+test("complete e2e user journey: view, search, paginate, and edit tracks", async ({
   page,
   mockTracks,
 }) => {
   await mockTracks();
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(DEFAULT_TIMEOUT);
+
+  const initialTracks = await page.getByTestId("track-item").all();
+  expect(initialTracks.length).toBe(
+    mockedTracks.length < 10 ? mockedTracks.length : 10
+  );
+  await expect(page.getByText("Test Track 1")).toBeVisible();
+
+  const searchInput = page.getByTestId("search-input");
+  await searchInput.fill("test track");
+  await page.waitForTimeout(DEFAULT_TIMEOUT);
+  const searchResults = await page.getByTestId("track-item").all();
+  expect(searchResults.length).toBeLessThanOrEqual(initialTracks.length);
+
+  await searchInput.clear();
+  await page.waitForTimeout(DEFAULT_TIMEOUT);
+  const restoredTracks = await page.getByTestId("track-item").all();
+  expect(restoredTracks.length).toBe(initialTracks.length);
+
+  const nextPageButton = page.getByTestId("pagination-next");
+  await nextPageButton.click();
+  await page.waitForTimeout(DEFAULT_TIMEOUT);
+  const nextPageTracks = await page.getByTestId("track-item").all();
+  expect(nextPageTracks.length).toBeGreaterThan(0);
 
   const trackToEdit = mockedTracks[0];
   const newTitle = "Updated Test Track";
@@ -36,6 +50,12 @@ test("should edit a track and update the list", async ({
     }
   });
 
+  const firstPageButton = page.getByTestId("pagination-prev");
+  if (await firstPageButton.isVisible()) {
+    await firstPageButton.click();
+    await page.waitForTimeout(DEFAULT_TIMEOUT);
+  }
+
   const firstTrack = page.getByTestId("track-item").first();
   await firstTrack.getByTestId("edit-track").click();
 
@@ -51,34 +71,4 @@ test("should edit a track and update the list", async ({
   await expect(page.getByTestId("track-form")).not.toBeVisible();
   await expect(page.getByText(newTitle)).toBeVisible();
   await expect(page.getByText(trackToEdit.title)).not.toBeVisible();
-});
-
-test("complete user journey: view, search, and manage tracks", async ({
-  page,
-  mockTracks,
-}) => {
-  await mockTracks();
-
-  await page.waitForTimeout(500);
-  const initialTracks = await page.getByTestId("track-item").all();
-  expect(initialTracks.length).toBeGreaterThan(0);
-
-  const searchInput = page.getByTestId("search-input");
-  await searchInput.fill("test track");
-  await page.waitForTimeout(500);
-  const searchResults = await page.getByTestId("track-item").all();
-  expect(searchResults.length).toBeLessThanOrEqual(initialTracks.length);
-
-  await searchInput.clear();
-  await page.waitForTimeout(500);
-  const restoredTracks = await page.getByTestId("track-item").all();
-  expect(restoredTracks.length).toBe(initialTracks.length);
-
-  const nextPageButton = page.getByTestId("pagination-next");
-  if (await nextPageButton.isVisible()) {
-    await nextPageButton.click();
-    await page.waitForTimeout(500);
-    const nextPageTracks = await page.getByTestId("track-item").all();
-    expect(nextPageTracks.length).toBeGreaterThan(0);
-  }
 });
