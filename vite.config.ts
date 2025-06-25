@@ -40,5 +40,9 @@ export default defineConfig(async ({ mode }) => {
       "process.env.VITE_BASE_URL": JSON.stringify(env.VITE_BASE_URL),
       "process.env.VITE_MODE": JSON.stringify(env.VITE_MODE),
     },
+    test: {
+      environment: "happy-dom",
+      globals: true,
+    },
   };
 });

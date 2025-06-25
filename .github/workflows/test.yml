@@ -1,0 +1,115 @@
+name: Run tests
+
+on:
+  push:
+env:
+  PNPM_CACHE_FOLDER: .cache/pnpm
+jobs:
+  component-tests:
+    name: Component and integration tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20.13.1]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-libs
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run component tests
+        run: pnpm test:ct
+
+      - name: Upload component test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-test-results
+          path: playwright-report/
+          retention-days: 30
+
+  e2e-tests:
+    name: E2E tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20.13.1]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-libs
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Run e2e tests
+        run: pnpm test
+
+      - name: Upload e2e test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: playwright-report/
+          retention-days: 30
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-22.04
+    needs: [component-tests, e2e-tests]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-libs
+        with:
+          node-version: 20.13.1
+
+      - name: Download component test results
+        uses: actions/download-artifact@v4
+        with:
+          name: component-test-results
+          path: component-results/
+
+      - name: Download e2e test results
+        uses: actions/download-artifact@v4
+        with:
+          name: e2e-test-results
+          path: e2e-results/
+
+      - name: Generate test summary
+        run: |
+          echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -d "component-results" ]; then
+            echo "### Component Tests" >> $GITHUB_STEP_SUMMARY
+            echo "Component test results available in artifacts" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ -d "e2e-results" ]; then
+            echo "### E2E Tests" >> $GITHUB_STEP_SUMMARY
+            echo "E2E test results available in artifacts" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View detailed results in the workflow artifacts above." >> $GITHUB_STEP_SUMMARY

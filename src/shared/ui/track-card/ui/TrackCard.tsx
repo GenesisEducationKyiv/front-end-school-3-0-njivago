@@ -11,14 +11,13 @@ export const TrackCard = ({
   className,
   menuButton,
   audioSrc,
-  id,
 }: TrackCardProps) => (
   <div
     className={cn(
       "flex flex-col border rounded-xl p-4 hover:bg-muted",
       className
     )}
-    data-testid={`track-item-${id}`}
+    data-testid="track-item"
   >
     <div className="flex items-center gap-4">
       <img
@@ -31,17 +30,14 @@ export const TrackCard = ({
         <div className="flex items-center justify-between">
           <h3
             className="font-medium text-text"
-            data-testid={`track-item-${id}-title`}
+            data-testid={`track-item-title`}
           >
             {title}
           </h3>
           {menuButton}
         </div>
 
-        <p
-          className="text-sm text-subtext"
-          data-testid={`track-item-${id}-artist`}
-        >
+        <p className="text-sm text-subtext" data-testid="track-item-artist">
           {artist} - {album}
         </p>
 
