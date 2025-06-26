@@ -98,7 +98,7 @@ jobs:
   test-summary:
     name: Test Summary
     runs-on: ubuntu-22.04
-    needs: [validate, client-component-tests, client-e2e-tests, server-tests]
+    needs: [client-component-tests, client-e2e-tests, server-tests]
     if: always()
     steps:
       - name: Checkout code
@@ -125,13 +125,6 @@ jobs:
         run: |
           echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "### Validation" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ needs.validate.result }}" == "success" ]; then
-            echo "✅ Type checking and linting passed" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ Type checking or linting failed" >> $GITHUB_STEP_SUMMARY
-          fi
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Client Tests" >> $GITHUB_STEP_SUMMARY
