@@ -11,7 +11,8 @@
     "test": "playwright test",
     "test:debug": "playwright test --debug",
     "test:ct": "playwright test --config=playwright-ct.config.ts",
-    "test:ct:debug": "playwright test --config=playwright-ct.config.ts --debug"
+    "test:ct:debug": "playwright test --config=playwright-ct.config.ts --debug",
+    "pw:browsers": "exec playwright install --with-deps"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

@@ -25,10 +25,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm --filter client pw:browsers
 
       - name: Run component tests
-        run: pnpm test:client:ct
+        run: pnpm --filter client test:ct
 
       - name: Upload component test results
         if: always()
@@ -56,13 +56,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm --filter client pw:browsers
 
       - name: Build client
         run: pnpm build:client
 
       - name: Run e2e tests
-        run: pnpm test:client
+        run: pnpm --filter client test
 
       - name: Upload e2e test results
         if: always()
