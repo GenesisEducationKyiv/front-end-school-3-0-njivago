@@ -1,66 +1,36 @@
 {
   "name": "test-case-genesis-school",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Full-stack application with client and server",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm dev:client\" \"pnpm dev:server\"",
+    "dev:client": "pnpm --filter client start",
+    "dev:server": "pnpm --filter server dev",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "type-check": "pnpm --filter client type-check && pnpm --filter server type-check",
+    "test": "pnpm test:client && pnpm test:server",
+    "test:client": "pnpm --filter client test && pnpm --filter client test:ct",
+    "test:server": "pnpm --filter server test",
+    "validate": "pnpm type-check && pnpm lint",
+    "prepare": "lefthook install"
+  },
+  "author": "Nikita Kuzmenko",
   "engines": {
     "node": "20.13.1"
   },
-  "type": "module",
-  "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
-    "type-check": "tsc --project tsconfig.json",
-    "prepare": "lefthook install",
-    "validate": "pnpm type-check && pnpm lint",
-    "test": "playwright test",
-    "test:debug": "playwright test --debug",
-    "test:ct": "playwright test --config=playwright-ct.config.ts",
-    "test:ct:debug": "playwright test --config=playwright-ct.config.ts --debug"
-  },
   "license": "ISC",
-  "lint-staged": {
-    "**/*.{ts,tsx}": "pnpm lint --cache"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^5.0.1",
-    "@mobily/ts-belt": "3.13.1",
-    "@reduxjs/toolkit": "^2.7.0",
-    "clsx": "^2.1.1",
-    "i18next": "^25.0.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-dropzone": "^14.3.8",
-    "react-hook-form": "^7.56.0",
-    "react-i18next": "^15.4.1",
-    "react-redux": "^9.2.0",
-    "react-toastify": "^11.0.5",
-    "tailwind-merge": "^3.2.0",
-    "valibot": "^1.0.0"
-  },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@playwright/experimental-ct-react": "1.53.1",
-    "@playwright/test": "1.53.1",
-    "@types/node": "^22.14.1",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "@vitejs/plugin-react": "^4.4.1",
-    "autoprefixer": "^10.4.21",
-    "babel-plugin-react-compiler": "19.1.0-rc.2",
+    "concurrently": "^8.2.2",
     "lefthook": "^1.11.13",
     "lint-staged": "^15.5.1",
-    "oxlint": "^0.16.7",
-    "postcss": "^8.5.3",
-    "svgr": "^2.0.0",
-    "tailwindcss": "3.4.17",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-svgr": "^4.3.0"
+    "oxlint": "^1.3.0"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": "pnpm lint --cache"
   },
   "pnpm": {
     "patchedDependencies": {
