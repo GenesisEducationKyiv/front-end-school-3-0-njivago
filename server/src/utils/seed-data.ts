@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 
 import config from "../config";
-import type { Track } from "../types";
+import type { Track, Genre } from "../generated/graphql";
 import { createTrack } from "./db";
 import { createSlug } from "./slug";
 
@@ -16,14 +16,14 @@ const initDirectories = async () => {
       await fs.access(config.storage.genresFile);
     } catch {
       // Default genres
-      const defaultGenres = [
+      const defaultGenres: Genre[] = [
         "Rock",
         "Pop",
-        "Hip Hop",
+        "Hip_Hop",
         "Jazz",
         "Classical",
         "Electronic",
-        "R&B",
+        "RnB",
         "Country",
         "Folk",
         "Reggae",
@@ -155,7 +155,7 @@ const getRandomElements = <T>(array: T[], min: number, max: number): T[] => {
 
 // Generate a single random track
 const generateRandomTrack = async (
-  genres: string[]
+  genres: Genre[]
 ): Promise<Omit<Track, "id" | "createdAt" | "updatedAt">> => {
   const title = getRandomElement(trackTitles);
   const artist = getRandomElement(artists);
@@ -181,7 +181,7 @@ export const seedDatabase = async (count = 50): Promise<void> => {
     await initDirectories();
 
     const genresData = await fs.readFile(config.storage.genresFile, "utf-8");
-    const genres = JSON.parse(genresData) as string[];
+    const genres = JSON.parse(genresData) as Genre[];
 
     for (let i = 0; i < count; i++) {
       const trackData = await generateRandomTrack(genres);

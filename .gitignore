@@ -9,6 +9,8 @@ node_modules
 *.DS_Store
 
 /server/data
+/server/src/generated/
+/server/dist/
 
 # Editor directories and files
 .vscode/*
