@@ -1,4 +1,5 @@
 import * as Belt from "@mobily/ts-belt";
+import type { AnyVariables, OperationResult } from "urql";
 
 export const getErrorMessage = (error: unknown) => {
   if (typeof error === "string") {
@@ -23,19 +24,26 @@ export const getErrorMessage = (error: unknown) => {
   return "An unknown error occurred";
 };
 
-export const handleApiRequest = async <T extends object>(
-  request: Promise<T>,
-  onSuccess: (data: T) => void,
+export const handleApiRequest = <TData>(
+  result: OperationResult<TData, AnyVariables>,
+  onSuccess: (data: TData) => void,
   onError: (error: unknown) => void
-) =>
-  Belt.pipe(
-    await Belt.R.fromPromise(request),
-    Belt.R.mapError((error) => {
-      onError(error);
-      return Belt.R.Error(error);
-    }),
-    Belt.R.flatMap((data) => {
-      onSuccess(data);
-      return Belt.R.Ok(data);
-    })
-  );
+) => {
+  if (result.error) {
+    onError(result.error);
+
+    return Belt.R.Error(result.error);
+  }
+
+  if (result.data) {
+    onSuccess(result.data);
+
+    return Belt.R.Ok(result.data);
+  }
+
+  const unknownError = new Error("No data or error received from operation");
+
+  onError(unknownError);
+
+  return Belt.R.Error(unknownError);
+};

@@ -34,7 +34,7 @@ export const CreateTrackForm = ({ onSubmit }: CreateTrackProps) => {
 
   const handleSubmit = async (data: CreateTrackSchema) => {
     await handleApiRequest(
-      onSubmit(data),
+      await onSubmit(data),
       () => {
         showSuccess(t("createTrack.success"));
         closeModal();

@@ -18,6 +18,7 @@ export const FileDropzone = ({
   const [isDragActive, setIsDragActive] = useState(false);
 
   const onDrop = (acceptedFiles: File[]) => {
+    console.log(acceptedFiles);
     onFilesAccepted(acceptedFiles);
     setIsDragActive(false);
   };

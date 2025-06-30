@@ -1,10 +1,10 @@
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { useTranslation } from "react-i18next";
-import { tracksApi } from "shared/lib/api/main";
 import { useActionConfirmation } from "widgets/action-confirmation";
 import { useToast } from "shared/ui/toast";
 import type { RemoveTrackProps } from "../lib/removeTrack.types";
 import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
+import { useDeleteTrackMutation } from "shared/lib/api/tracks";
 
 export const RemoveTrackButton = ({
   trackId,
@@ -13,15 +13,14 @@ export const RemoveTrackButton = ({
 }: RemoveTrackProps) => {
   const { t } = useTranslation();
   const { openConfirmation } = useActionConfirmation();
-  const [deleteTrack] = tracksApi.useDeleteTrackMutation();
+  const [deleteTrack] = useDeleteTrackMutation();
   const { showSuccess, showError } = useToast();
 
   const handleDelete = async () => {
     await handleApiRequest(
-      deleteTrack({
-        params: { id: trackId },
-        body: {},
-      }).unwrap(),
+      await deleteTrack({
+        id: trackId,
+      }),
       () => {
         showSuccess(t("removeTrack.success"));
 

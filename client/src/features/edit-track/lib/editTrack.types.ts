@@ -1,8 +1,8 @@
-import type { TTracksApi } from "shared/lib/api/main";
+import type { OperationResult } from "urql";
 import type { EditTrackSchema } from "./editTrack.schema";
 
 export type EditTrackProps = {
-  onSubmit: (data: EditTrackSchema) => Promise<TTracksApi.TUpdateTrackResponse>;
+  onSubmit: (data: EditTrackSchema) => Promise<OperationResult>;
   initialData: EditTrackSchema;
   trackId: number;
 };

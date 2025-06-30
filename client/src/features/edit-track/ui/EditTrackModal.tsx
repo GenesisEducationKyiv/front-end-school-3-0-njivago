@@ -47,7 +47,7 @@ const EditTrackForm = ({ onSubmit, initialData }: EditTrackProps) => {
 
   const handleSubmit = async (data: EditTrackSchema) => {
     await handleApiRequest(
-      onSubmit(data),
+      await onSubmit(data),
       () => {
         showSuccess(t("editTrack.success"));
         closeModal();

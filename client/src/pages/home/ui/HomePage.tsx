@@ -3,77 +3,73 @@ import { useState } from "react";
 import { CreateTrackButton } from "features/create-track";
 import { EditTrackButton } from "features/edit-track";
 import { RemoveTrackButton } from "features/remove-track";
-import { tracksApi } from "shared/lib/api/main";
 import { TracksList } from "widgets/tracks-list";
 import type { Track } from "entities/track";
 import { UploadAudioButton } from "features/upload-audio";
 import type { CreateTrackSchema } from "features/create-track/lib/createTrack.schema";
 import type { EditTrackSchema } from "features/edit-track";
-
-type QueryParams = {
-  page?: number;
-  limit?: number;
-  sort?: "title" | "artist" | "album" | "createdAt";
-  order?: "asc" | "desc";
-  search?: string;
-  genre?: string;
-  artist?: string;
-};
+import type { TGetTracksOptions } from "shared/lib/api/tracks";
+import {
+  useCreateTrackMutation,
+  useDeleteTracksMutation,
+  useTracksQuery,
+  useUpdateTrackMutation,
+} from "shared/lib/api/tracks";
+import { useActiveTrackChanged } from "shared/lib/api/activeTrack";
 
 export const HomePage = () => {
   const { t } = useTranslation();
-  const [queryParams, setQueryParams] = useState<QueryParams>({
-    page: 1,
-    limit: 10,
+  const [queryParams, setQueryParams] = useState<TGetTracksOptions["input"]>({
+    page: "1",
+    limit: "10",
   });
 
-  const {
-    data: tracksResponse,
-    isLoading: isTracksLoading,
-    isFetching,
-  } = tracksApi.useGetTracksQuery({
-    search: queryParams,
+  const [{ data: tracksResponse, fetching }] = useTracksQuery({
+    input: queryParams,
   });
 
-  const [createTrack] = tracksApi.useCreateTrackMutation();
-  const [updateTrack] = tracksApi.useUpdateTrackMutation();
-  const [deleteTracks] = tracksApi.useDeleteTracksMutation();
+  const [{ data: activeTrackResponse }] = useActiveTrackChanged();
+
+  const [createTrack] = useCreateTrackMutation();
+  const [updateTrack] = useUpdateTrackMutation();
+  const [deleteTracks] = useDeleteTracksMutation();
 
   const handleCreateTrack = async (data: CreateTrackSchema) =>
     await createTrack({
-      body: {
+      input: {
         title: data.title,
         artist: data.artist,
         album: data.album,
         genres: data.genres,
         coverImage: data.coverUrl || "",
       },
-    }).unwrap();
+    });
 
   const handleUpdateTrack = async (trackId: string, data: EditTrackSchema) =>
     await updateTrack({
-      params: { id: trackId },
-      body: {
+      id: trackId,
+      input: {
         title: data.title,
         artist: data.artist,
         album: data.album,
         genres: data.genres,
         coverImage: data.coverUrl || "",
       },
-    }).unwrap();
+    });
 
   const handleBulkDelete = async (trackIds: string[]) => {
     await deleteTracks({
-      body: { ids: trackIds },
+      input: {
+        ids: trackIds,
+      },
     });
   };
 
-  const handleQueryChange = (params: QueryParams) => {
+  const handleQueryChange = (params: TGetTracksOptions["input"]) => {
     setQueryParams(params);
   };
 
   const renderTrackMenu = (track: Track) => {
-    // Check if track has audio file
     const hasAudio = !!track.audioFile;
 
     return (
@@ -83,9 +79,9 @@ export const HomePage = () => {
           initialData={{
             title: track.title,
             artist: track.artist,
-            album: track.album,
+            album: track.album || "",
             genres: track.genres,
-            coverUrl: track.coverImage,
+            coverUrl: track.coverImage || "",
           }}
           trackId={Number(track.id)}
         />
@@ -102,8 +98,8 @@ export const HomePage = () => {
     );
   };
 
-  const tracks = tracksResponse?.data ?? [];
-  const totalItems = tracksResponse?.meta?.total ?? 0;
+  const tracks = tracksResponse?.tracks?.data ?? [];
+  const totalItems = tracksResponse?.tracks?.meta?.total ?? 0;
 
   return (
     <div className="container mx-auto py-8">
@@ -114,6 +110,7 @@ export const HomePage = () => {
         <h1 className="text-2xl font-bold">{t("tracks.title")}</h1>
         <CreateTrackButton onSubmit={handleCreateTrack} />
       </div>
+      <h3>Active track: {activeTrackResponse?.activeTrackChanged}</h3>
 
       <TracksList
         tracks={tracks}
@@ -121,7 +118,7 @@ export const HomePage = () => {
         className="mt-6"
         onDeleteTracks={handleBulkDelete}
         totalItems={totalItems}
-        isLoading={isTracksLoading || isFetching}
+        isLoading={fetching}
         onQueryChange={handleQueryChange}
       />
     </div>

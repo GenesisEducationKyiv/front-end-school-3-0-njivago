@@ -1,11 +1,4 @@
-export type Track = {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  coverImage: string;
-  genres: string[];
-  audioFile?: string;
-  slug: string;
-  createdAt?: string;
-};
+import type { trackSchema } from "shared/lib/api/tracks/tracks.schema";
+import type { InferOutput } from "valibot";
+
+export type Track = InferOutput<typeof trackSchema>;
