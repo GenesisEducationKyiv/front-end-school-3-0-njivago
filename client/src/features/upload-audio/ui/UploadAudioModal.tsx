@@ -10,6 +10,7 @@ import {
   useDeleteAudioFileMutation,
   useUploadAudioFileMutation,
 } from "shared/lib/api/tracks";
+import type { FC } from "react";
 
 type UploadAudioFormData = {
   file: File | null;
@@ -21,7 +22,7 @@ type UploadAudioModalProps = {
   onSuccess?: () => void;
 };
 
-export const UploadAudioButton: React.FC<UploadAudioModalProps> = ({
+export const UploadAudioButton: FC<UploadAudioModalProps> = ({
   trackId,
   hasAudio,
   onSuccess,
@@ -55,7 +56,7 @@ export const UploadAudioButton: React.FC<UploadAudioModalProps> = ({
   );
 };
 
-const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
+const UploadAudioForm: FC<UploadAudioModalProps> = ({
   trackId,
   hasAudio,
   onSuccess,

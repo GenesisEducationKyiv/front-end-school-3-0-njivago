@@ -1,9 +1,9 @@
-import type React from "react";
 import { useModal } from "../lib/ModalContext";
 import { Button } from "shared/ui/buttons/button/ui/Button";
 import { Loader } from "shared/ui/loader";
+import type { FC } from "react";
 
-export const Modal: React.FC = () => {
+export const Modal: FC = () => {
   const { state, closeModal } = useModal();
 
   if (!state.isOpen) return null;

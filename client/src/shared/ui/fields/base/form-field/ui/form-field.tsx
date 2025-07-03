@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import type { HTMLAttributes } from "react";
 import type { FieldError } from "react-hook-form";
 import { cn } from "shared/lib/utils";
 
@@ -7,7 +8,7 @@ type FormFieldProps = {
   error?: FieldError;
   required?: boolean;
   htmlFor?: string;
-} & React.HTMLAttributes<HTMLDivElement>
+} & HTMLAttributes<HTMLDivElement>;
 
 export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
   ({ className, label, error, required, htmlFor, children, ...props }, ref) => (
