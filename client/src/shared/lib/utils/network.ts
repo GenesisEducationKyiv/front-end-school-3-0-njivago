@@ -1,4 +1,4 @@
-import * as Belt from "@mobily/ts-belt";
+import { R } from "@mobily/ts-belt";
 import type { AnyVariables, OperationResult } from "urql";
 
 export const getErrorMessage = (error: unknown) => {
@@ -32,18 +32,18 @@ export const handleApiRequest = <TData>(
   if (result.error) {
     onError(result.error);
 
-    return Belt.R.Error(result.error);
+    return R.Error(result.error);
   }
 
   if (result.data) {
     onSuccess(result.data);
 
-    return Belt.R.Ok(result.data);
+    return R.Ok(result.data);
   }
 
   const unknownError = new Error("No data or error received from operation");
 
   onError(unknownError);
 
-  return Belt.R.Error(unknownError);
+  return R.Error(unknownError);
 };

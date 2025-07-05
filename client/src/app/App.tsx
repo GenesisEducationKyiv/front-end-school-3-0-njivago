@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ModalProvider, Modal } from "shared/ui/modal";
 import { Header } from "widgets/header";
 import { HomePage } from "pages/home";
@@ -12,7 +13,15 @@ function App() {
         <div className="flex flex-col min-h-screen">
           <Header />
           <main className="flex-1">
-            <HomePage />
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center h-64">
+                  Loading...
+                </div>
+              }
+            >
+              <HomePage />
+            </Suspense>
           </main>
           <Modal />
           <ToastContainer />

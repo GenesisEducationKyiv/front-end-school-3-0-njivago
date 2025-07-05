@@ -1,5 +1,5 @@
-import type React from "react";
 import { useState, useRef, useEffect } from "react";
+import type { ChangeEvent, FC } from "react";
 import { cn } from "shared/lib/utils";
 
 type AudioPlayerProps = {
@@ -8,7 +8,7 @@ type AudioPlayerProps = {
   className?: string;
 };
 
-export const AudioPlayer: React.FC<AudioPlayerProps> = ({
+export const AudioPlayer: FC<AudioPlayerProps> = ({
   src,
   title,
   className,
@@ -50,7 +50,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setIsPlaying(!isPlaying);
   };
 
-  const onSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSeek = (e: ChangeEvent<HTMLInputElement>) => {
     if (!audioRef.current) return;
 
     const newTime = parseFloat(e.target.value);
@@ -58,7 +58,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setCurrentTime(newTime);
   };
 
-  const onVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onVolumeChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!audioRef.current) return;
 
     const newVolume = parseFloat(e.target.value);

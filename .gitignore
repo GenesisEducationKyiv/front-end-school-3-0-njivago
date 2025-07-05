@@ -12,6 +12,9 @@ node_modules
 /server/src/generated/
 /server/dist/
 
+/client/dist/
+/client/stats.html
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

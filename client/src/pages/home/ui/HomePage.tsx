@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { CreateTrackButton } from "features/create-track";
 import { EditTrackButton } from "features/edit-track";
 import { RemoveTrackButton } from "features/remove-track";
@@ -16,6 +16,7 @@ import {
   useUpdateTrackMutation,
 } from "shared/lib/api/tracks";
 import { useActiveTrackChanged } from "shared/lib/api/activeTrack";
+import { Loader } from "shared/ui";
 
 export const HomePage = () => {
   const { t } = useTranslation();
@@ -85,14 +86,18 @@ export const HomePage = () => {
           }}
           trackId={Number(track.id)}
         />
-        <UploadAudioButton
-          key={`upload-btn-${track.id}-${hasAudio ? "has-audio" : "no-audio"}`}
-          trackId={track.id}
-          hasAudio={hasAudio}
-          onSuccess={() => {
-            setQueryParams({ ...queryParams });
-          }}
-        />
+        <Suspense fallback={<Loader />}>
+          <UploadAudioButton
+            key={`upload-btn-${track.id}-${
+              hasAudio ? "has-audio" : "no-audio"
+            }`}
+            trackId={track.id}
+            hasAudio={hasAudio}
+            onSuccess={() => {
+              setQueryParams({ ...queryParams });
+            }}
+          />
+        </Suspense>
         <RemoveTrackButton trackId={track.id} trackTitle={track.title} />
       </div>
     );
@@ -112,15 +117,17 @@ export const HomePage = () => {
       </div>
       <h3>Active track: {activeTrackResponse?.activeTrackChanged}</h3>
 
-      <TracksList
-        tracks={tracks}
-        renderMenu={renderTrackMenu}
-        className="mt-6"
-        onDeleteTracks={handleBulkDelete}
-        totalItems={totalItems}
-        isLoading={fetching}
-        onQueryChange={handleQueryChange}
-      />
+      <Suspense fallback={<Loader />}>
+        <TracksList
+          tracks={tracks}
+          renderMenu={renderTrackMenu}
+          className="mt-6"
+          onDeleteTracks={handleBulkDelete}
+          totalItems={totalItems}
+          isLoading={fetching}
+          onQueryChange={handleQueryChange}
+        />
+      </Suspense>
     </div>
   );
 };
