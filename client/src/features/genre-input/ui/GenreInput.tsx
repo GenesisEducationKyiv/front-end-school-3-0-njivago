@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { cn } from "shared/lib/utils";
@@ -87,7 +87,7 @@ export const GenreInput = <TFieldValues extends Record<string, unknown>>({
 
   const [{ data: genresResponse }] = useGenresQuery();
 
-  const genres = useMemo(() => genresResponse?.genres || [], [genresResponse]);
+  const genres = genresResponse?.genres || [];
 
   const filterSuggestions = useCallback(
     (input: string, genresList: string[]) => {
@@ -103,7 +103,8 @@ export const GenreInput = <TFieldValues extends Record<string, unknown>>({
     const filtered = filterSuggestions(inputValue, genres);
     setSuggestions(filtered);
     setActiveIndex(-1);
-  }, [inputValue, genres, filterSuggestions]);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- react compiler handle memoization
+  }, [inputValue, filterSuggestions, genres]);
 
   const handleSelectSuggestion = (
     suggestion: string,

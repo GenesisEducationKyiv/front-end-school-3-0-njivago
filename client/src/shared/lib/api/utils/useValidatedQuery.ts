@@ -26,7 +26,8 @@ export const useValidatedQuery = <
     {
       ...result,
       error: result.error
-        ? (handleGraphQLError(result.error) as any)
+        ? // oxlint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: fix errors handling due to urql types
+          (handleGraphQLError(result.error) as any)
         : undefined,
       data: validatedData,
     },

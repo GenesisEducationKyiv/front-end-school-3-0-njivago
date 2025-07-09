@@ -3,8 +3,8 @@ import { ACTIVE_TRACK } from "./activeTrack.query";
 import { activeTrackSchema } from "./activeTrack.schema";
 import type { TActiveTrackResponse } from "./activeTrack.types";
 
-export const useActiveTrackChanged = () => {
-  return useValidatedSubscription<TActiveTrackResponse, void>(
+export const useActiveTrackChanged = () =>
+  useValidatedSubscription<TActiveTrackResponse, void>(
     {
       query: ACTIVE_TRACK,
     },
@@ -12,4 +12,3 @@ export const useActiveTrackChanged = () => {
     "activeTrack",
     "activeTrack"
   );
-};

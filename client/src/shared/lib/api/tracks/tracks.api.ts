@@ -33,8 +33,8 @@ import type {
   TUploadAudioFileResponse,
 } from "./tracks.types";
 
-export const useTracksQuery = (options: TGetTracksOptions) => {
-  return useValidatedQuery<TGetTracksResponse, TGetTracksOptions>(
+export const useTracksQuery = (options: TGetTracksOptions) =>
+  useValidatedQuery<TGetTracksResponse, TGetTracksOptions>(
     {
       query: GET_TRACKS,
       variables: options,
@@ -43,10 +43,9 @@ export const useTracksQuery = (options: TGetTracksOptions) => {
     "tracks",
     "getTracks"
   );
-};
 
-export const useTrackBySlugQuery = (options: TGetTrackBySlugOptions) => {
-  return useValidatedQuery<TGetTrackBySlugResponse, TGetTrackBySlugOptions>(
+export const useTrackBySlugQuery = (options: TGetTrackBySlugOptions) =>
+  useValidatedQuery<TGetTrackBySlugResponse, TGetTrackBySlugOptions>(
     {
       query: GET_TRACK_BY_SLUG,
       variables: options,
@@ -55,54 +54,51 @@ export const useTrackBySlugQuery = (options: TGetTrackBySlugOptions) => {
     "tracks",
     "getTrackBySlug"
   );
-};
 
-export const useCreateTrackMutation = () => {
-  return useValidatedMutation<TCreateTrackResponse, TCreateTrackOptions>(
+export const useCreateTrackMutation = () =>
+  useValidatedMutation<TCreateTrackResponse, TCreateTrackOptions>(
     CREATE_TRACK,
     trackSchema,
     "tracks",
     "createTrack"
   );
-};
 
-export const useUpdateTrackMutation = () => {
-  return useValidatedMutation<TUpdateTrackResponse, TUpdateTrackOptions>(
+export const useUpdateTrackMutation = () =>
+  useValidatedMutation<TUpdateTrackResponse, TUpdateTrackOptions>(
     UPDATE_TRACK,
     trackSchema,
     "tracks",
     "updateTrack"
   );
-};
 
-export const useDeleteTrackMutation = () => {
-  return useValidatedMutation<TDeleteTrackResponse, TDeleteTrackOptions>(
+export const useDeleteTrackMutation = () =>
+  useValidatedMutation<TDeleteTrackResponse, TDeleteTrackOptions>(
     DELETE_TRACK,
     trackSchema,
     "tracks",
     "deleteTrack"
   );
-};
 
-export const useDeleteTracksMutation = () => {
-  return useValidatedMutation<TDeleteTracksResponse, TDeleteTracksOptions>(
+export const useDeleteTracksMutation = () =>
+  useValidatedMutation<TDeleteTracksResponse, TDeleteTracksOptions>(
     DELETE_TRACKS,
     deleteTracksSchema,
     "tracks",
     "deleteTracks"
   );
-};
 
-export const useUploadAudioFileMutation = () => {
-  return useValidatedMutation<
-    TUploadAudioFileResponse,
-    TUploadAudioFileOptions
-  >(UPLOAD_AUDIO_FILE, trackSchema, "tracks", "uploadAudioFile");
-};
+export const useUploadAudioFileMutation = () =>
+  useValidatedMutation<TUploadAudioFileResponse, TUploadAudioFileOptions>(
+    UPLOAD_AUDIO_FILE,
+    trackSchema,
+    "tracks",
+    "uploadAudioFile"
+  );
 
-export const useDeleteAudioFileMutation = () => {
-  return useValidatedMutation<
-    TDeleteAudioFileResponse,
-    TDeleteAudioFileOptions
-  >(DELETE_AUDIO_FILE, trackSchema, "tracks", "deleteAudioFile");
-};
+export const useDeleteAudioFileMutation = () =>
+  useValidatedMutation<TDeleteAudioFileResponse, TDeleteAudioFileOptions>(
+    DELETE_AUDIO_FILE,
+    trackSchema,
+    "tracks",
+    "deleteAudioFile"
+  );

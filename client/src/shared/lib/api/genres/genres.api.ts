@@ -3,8 +3,8 @@ import { GET_GENRES } from "./genres.query";
 import { getGenresSchema } from "./genres.schema";
 import type { TGetGenresResponse } from "./genres.types";
 
-export const useGenresQuery = (options?: never) => {
-  return useValidatedQuery<TGetGenresResponse, void>(
+export const useGenresQuery = (options?: never) =>
+  useValidatedQuery<TGetGenresResponse, void>(
     {
       query: GET_GENRES,
       variables: options,
@@ -13,4 +13,3 @@ export const useGenresQuery = (options?: never) => {
     "genres",
     "getGenres"
   );
-};

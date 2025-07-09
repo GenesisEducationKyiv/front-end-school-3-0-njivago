@@ -17,11 +17,11 @@ const wsClient = createWSClient({
 export const graphqlClient = createClient({
   url: import.meta.env.VITE_API_URL,
   exchanges: [
+    debugExchange,
     cacheExchange({
       updates: tracksCacheExchange,
     }),
     fetchExchange,
-    debugExchange,
     subscriptionExchange({
       forwardSubscription(request) {
         const input = { ...request, query: request.query || "" };
