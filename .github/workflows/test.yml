@@ -1,0 +1,153 @@
+name: Run tests
+
+on:
+  push:
+
+env:
+  PNPM_CACHE_FOLDER: .cache/pnpm
+
+jobs:
+  client-component-tests:
+    name: Client component and integration tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20.13.1]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-libs
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter client pw:browsers
+
+      - name: Run component tests
+        run: pnpm --filter client test:ct
+
+      - name: Upload component test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-component-test-results
+          path: playwright-report/
+          retention-days: 30
+
+  client-e2e-tests:
+    name: Client E2E tests
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20.13.1]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-libs
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter client pw:browsers
+
+      - name: Build client
+        run: pnpm build:client
+
+      - name: Run e2e tests
+        run: pnpm --filter client test
+
+      - name: Upload e2e test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-e2e-test-results
+          path: playwright-report/
+          retention-days: 30
+
+  # TODO: Add server tests
+  # server-tests:
+  #   name: Server tests
+  #   runs-on: ubuntu-22.04
+  #   strategy:
+  #     matrix:
+  #       node-version: [20.13.1]
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - uses: ./.github/actions/setup-libs
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile
+
+  #     - name: Run server tests
+  #       run: pnpm test:server
+
+  #     - name: Build server
+  #       run: pnpm build:server
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-22.04
+    needs: [client-component-tests, client-e2e-tests, server-tests]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-libs
+        with:
+          node-version: 20.13.1
+
+      - name: Download client component test results
+        uses: actions/download-artifact@v4
+        with:
+          name: client-component-test-results
+          path: client-component-results/
+
+      - name: Download client e2e test results
+        uses: actions/download-artifact@v4
+        with:
+          name: client-e2e-test-results
+          path: client-e2e-results/
+
+      - name: Generate test summary
+        run: |
+          echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Client Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.client-component-tests.result }}" == "success" ]; then
+            echo "✅ Component tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Component tests failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.client-e2e-tests.result }}" == "success" ]; then
+            echo "✅ E2E tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ E2E tests failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Server Tests" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.server-tests.result }}" == "success" ]; then
+            echo "✅ Server tests passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Server tests failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View detailed results in the workflow artifacts above." >> $GITHUB_STEP_SUMMARY

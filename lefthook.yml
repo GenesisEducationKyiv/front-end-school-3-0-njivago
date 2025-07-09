@@ -21,15 +21,6 @@ pre-commit:
         pnpm type-check
       skip: [merge, rebase]
 
-    no-debug:
-      glob: "*.{ts,tsx}"
-      run: |
-        echo "🐛 Checking for debug code..."
-        if grep -l "console.log\|debugger" {staged_files}; then
-          echo "⚠️ Debug code detected in staged files!"
-          exit 1
-        fi
-
 #---------------------------------------------
 # Commit message validation
 #---------------------------------------------

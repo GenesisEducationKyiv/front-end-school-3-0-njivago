@@ -18,7 +18,7 @@ jobs:
       - name: Audit packages
         run: pnpm audit --audit-level critical
     continue-on-error: true
-  test:
+  validate:
     needs: audit
     runs-on: ubuntu-22.04
     strategy:

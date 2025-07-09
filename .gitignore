@@ -8,6 +8,19 @@ node_modules
 .env
 *.DS_Store
 
+/server/data
+/server/dist/
+
+/client/dist/
+/client/stats.html
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+.idea
+
+# Playwright
+test-results
+playwright-report
+blob-report
+client/playwright/.cache/
