@@ -5,8 +5,10 @@ import type {
   Track,
   BatchDeleteResponse,
   TrackQueryInput,
-  Genre,
+  Scalars,
 } from "../generated/graphql";
+
+type Genre = Scalars["Genre"]["output"];
 
 /**
  * Result of getTracks with pagination
@@ -35,7 +37,7 @@ export const initializeDb = async (): Promise<void> => {
       const defaultGenres: Genre[] = [
         "Rock",
         "Pop",
-        "Hip_Hop",
+        "Hip Hop",
         "Jazz",
         "Classical",
         "Electronic",
@@ -139,8 +141,8 @@ export const getTracks = async (
     const total = tracks.length;
 
     // Apply pagination
-    const page = params.page || 1;
-    const limit = params.limit || 10;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 10;
     const start = (page - 1) * limit;
     const end = start + limit;
 

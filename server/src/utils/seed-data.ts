@@ -1,9 +1,11 @@
 import fs from "fs/promises";
 
 import config from "../config";
-import type { Track, Genre } from "../generated/graphql";
+import type { Track, Scalars } from "../generated/graphql";
 import { createTrack } from "./db";
 import { createSlug } from "./slug";
+
+type Genre = Scalars["Genre"]["output"];
 
 // Initialize directories
 const initDirectories = async () => {
@@ -19,7 +21,7 @@ const initDirectories = async () => {
       const defaultGenres: Genre[] = [
         "Rock",
         "Pop",
-        "Hip_Hop",
+        "Hip Hop",
         "Jazz",
         "Classical",
         "Electronic",

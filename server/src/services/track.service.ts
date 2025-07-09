@@ -18,8 +18,8 @@ import type {
 export class TrackService {
   async getAll(query: TrackQueryInput) {
     const { tracks, total } = await getTracks(query);
-    const page = query.page || 1;
-    const limit = query.limit || 10;
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
 
     return {
       data: tracks,
@@ -71,7 +71,7 @@ export class TrackService {
     return success;
   }
 
-  async removeMany(ids: string[]): Promise<boolean> {
-    return !!deleteMultipleTracks(ids);
+  async removeMany(ids: string[]) {
+    return !!(await deleteMultipleTracks(ids));
   }
 }
