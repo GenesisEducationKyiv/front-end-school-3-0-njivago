@@ -4,13 +4,15 @@ import multipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-import routes from "./routes";
+import { fastifyWebsocket } from "@fastify/websocket";
+import { makeHandler } from "graphql-ws/use/@fastify/websocket";
+import { fastifyApolloHandler } from "@as-integrations/fastify";
 import { initializeDb } from "./utils/db";
 import config from "./config";
+import { WSSchema, createGraphQLServer } from "./graphql";
 
 async function start() {
   try {
-    // Initialize database
     await initializeDb();
 
     const fastify = Fastify({
@@ -28,7 +30,6 @@ async function start() {
       },
     });
 
-    // Register plugins
     await fastify.register(cors, {
       origin: config.cors.origin,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -41,14 +42,14 @@ async function start() {
       },
     });
 
-    // Serve static files (uploads)
     await fastify.register(fastifyStatic, {
       root: config.storage.uploadsDir,
-      prefix: "/api/files/",
+      prefix: "/graphql/files/",
       decorateReply: false,
     });
 
-    // Register Swagger
+    await fastify.register(fastifyWebsocket);
+
     await fastify.register(swagger, {
       openapi: {
         info: {
@@ -59,7 +60,6 @@ async function start() {
       },
     });
 
-    // Register Swagger UI
     await fastify.register(swaggerUi, {
       routePrefix: "/documentation",
       uiConfig: {
@@ -68,16 +68,35 @@ async function start() {
       },
     });
 
-    // Register routes
-    await fastify.register(routes);
+    const apollo = await createGraphQLServer(fastify);
+    await apollo.start();
 
-    // Start server
+    await fastify.register(async (fastify) => {
+      fastify.get(
+        "/graphql/ws",
+        { websocket: true },
+        makeHandler({ schema: WSSchema })
+      );
+    });
+
+    await fastify.route({
+      method: ["POST", "OPTIONS"],
+      url: "/graphql",
+      handler: fastifyApolloHandler(apollo),
+    });
+
     await fastify.listen({
       port: config.server.port,
       host: config.server.host,
     });
-  } catch (_error) {
+
+    console.log(
+      `🚀 Server running at http://${config.server.host}:${config.server.port}/graphql`
+    );
+  } catch (error) {
+    console.error("Server failed to start", error);
     process.exit(1);
   }
 }
+
 start();

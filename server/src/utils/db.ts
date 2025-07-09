@@ -1,7 +1,14 @@
 import fs from "fs/promises";
 import path from "path";
-import type { Track, QueryParams, BatchDeleteResponse } from "../types";
 import config from "../config";
+import type {
+  Track,
+  BatchDeleteResponse,
+  TrackQueryInput,
+  Scalars,
+} from "../generated/graphql";
+
+type Genre = Scalars["Genre"]["output"];
 
 /**
  * Result of getTracks with pagination
@@ -27,14 +34,14 @@ export const initializeDb = async (): Promise<void> => {
       await fs.access(GENRES_FILE);
     } catch {
       // Default genres
-      const defaultGenres = [
+      const defaultGenres: Genre[] = [
         "Rock",
         "Pop",
         "Hip Hop",
         "Jazz",
         "Classical",
         "Electronic",
-        "R&B",
+        "RnB",
         "Country",
         "Folk",
         "Reggae",
@@ -53,10 +60,10 @@ export const initializeDb = async (): Promise<void> => {
  * Get all available music genres
  * @returns Array of genre names
  */
-export const getGenres = async (): Promise<string[]> => {
+export const getGenres = async (): Promise<Genre[]> => {
   try {
     const data = await fs.readFile(GENRES_FILE, "utf-8");
-    return JSON.parse(data) as string[];
+    return JSON.parse(data) as Genre[];
   } catch (_error) {
     return [];
   }
@@ -68,7 +75,7 @@ export const getGenres = async (): Promise<string[]> => {
  * @returns Object containing tracks array and total count
  */
 export const getTracks = async (
-  params: QueryParams = {}
+  params: TrackQueryInput = {}
 ): Promise<GetTracksResult> => {
   try {
     const files = await fs.readdir(TRACKS_DIR);
@@ -95,7 +102,7 @@ export const getTracks = async (
 
     if (params.genre) {
       tracks = tracks.filter((track) =>
-        track.genres.includes(params.genre as string)
+        track.genres.includes(params.genre as Genre)
       );
     }
 
@@ -134,8 +141,8 @@ export const getTracks = async (
     const total = tracks.length;
 
     // Apply pagination
-    const page = params.page || 1;
-    const limit = params.limit || 10;
+    const page = Number(params.page) || 1;
+    const limit = Number(params.limit) || 10;
     const start = (page - 1) * limit;
     const end = start + limit;
 

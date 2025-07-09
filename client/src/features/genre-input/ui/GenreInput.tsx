@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Controller } from "react-hook-form";
-import { genresApi } from "shared/lib/api/main";
 import { useTranslation } from "react-i18next";
 import { cn } from "shared/lib/utils";
 import type { GenreInputProps } from "../lib/genreInput.types";
 import { isStringArray } from "shared/lib/utils";
+import { useGenresQuery } from "shared/lib/api/genres";
 
 const Tag = ({
   tag,
@@ -85,9 +85,9 @@ export const GenreInput = <TFieldValues extends Record<string, unknown>>({
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
-  const { data: genresResponse } = genresApi.useGetGenresQuery();
+  const [{ data: genresResponse }] = useGenresQuery();
 
-  const genres = useMemo(() => genresResponse?.data || [], [genresResponse]);
+  const genres = genresResponse?.genres || [];
 
   const filterSuggestions = useCallback(
     (input: string, genresList: string[]) => {
@@ -103,7 +103,8 @@ export const GenreInput = <TFieldValues extends Record<string, unknown>>({
     const filtered = filterSuggestions(inputValue, genres);
     setSuggestions(filtered);
     setActiveIndex(-1);
-  }, [inputValue, genres, filterSuggestions]);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- react compiler handle memoization
+  }, [inputValue, filterSuggestions, genres]);
 
   const handleSelectSuggestion = (
     suggestion: string,

@@ -1,15 +1,6 @@
 import type { ReactNode } from "react";
 import type { Track } from "entities/track";
-
-type QueryParams = {
-  page?: number;
-  limit?: number;
-  sort?: "title" | "artist" | "album" | "createdAt";
-  order?: "asc" | "desc";
-  search?: string;
-  genre?: string;
-  artist?: string;
-};
+import type { TGetTracksOptions } from "shared/lib/api/tracks";
 
 export type TracksListProps = {
   tracks: Track[];
@@ -19,5 +10,5 @@ export type TracksListProps = {
   onAudioUpdated?: (trackId: string) => void;
   totalItems?: number;
   isLoading?: boolean;
-  onQueryChange?: (params: QueryParams) => void;
+  onQueryChange?: (params: TGetTracksOptions["input"]) => void;
 };

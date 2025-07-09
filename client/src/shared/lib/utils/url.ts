@@ -1,4 +1,4 @@
-import * as Belt from "@mobily/ts-belt";
+import { A, O, pipe } from "@mobily/ts-belt";
 import type { PartialRecord } from "../types";
 
 // Note: in case of adding react-router or any other router, we need to use it instead of window.location.href
@@ -6,13 +6,13 @@ import type { PartialRecord } from "../types";
 export const getSearchParams = <T extends string>(
   keys: T[]
 ): PartialRecord<T, string> =>
-  Belt.pipe(new URL(window.location.href), (url) =>
-    Belt.A.reduce(keys, {}, (acc, key) =>
-      Belt.pipe(
+  pipe(new URL(window.location.href), (url) =>
+    A.reduce(keys, {}, (acc, key) =>
+      pipe(
         url.searchParams.get(key),
-        Belt.O.fromNullable,
-        Belt.O.map((value) => ({ ...acc, [key]: value })),
-        Belt.O.getWithDefault(acc)
+        O.fromNullable,
+        O.map((value) => ({ ...acc, [key]: value })),
+        O.getWithDefault(acc)
       )
     )
   );
@@ -27,7 +27,7 @@ export const setSearchParams = (params: Record<string, string>): void => {
 
 export const removeSearchParams = (keys: string[]): void => {
   const url = new URL(window.location.href);
-  Belt.A.forEach(keys, (key) => {
+  A.forEach(keys, (key) => {
     url.searchParams.delete(key);
   });
   window.history.pushState({}, "", url.toString());

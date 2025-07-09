@@ -3,10 +3,14 @@ import { useModal } from "shared/ui/modal";
 import { Button } from "shared/ui/buttons";
 import { FileDropzone } from "shared/ui/fields";
 import { Loader } from "shared/ui/loader";
-import { tracksApi } from "shared/lib/api/main";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useToast } from "shared/ui/toast";
 import { getErrorMessage, handleApiRequest } from "shared/lib/utils";
+import {
+  useDeleteAudioFileMutation,
+  useUploadAudioFileMutation,
+} from "shared/lib/api/tracks";
+import type { FC } from "react";
 
 type UploadAudioFormData = {
   file: File | null;
@@ -18,7 +22,7 @@ type UploadAudioModalProps = {
   onSuccess?: () => void;
 };
 
-export const UploadAudioButton: React.FC<UploadAudioModalProps> = ({
+export const UploadAudioButton: FC<UploadAudioModalProps> = ({
   trackId,
   hasAudio,
   onSuccess,
@@ -52,7 +56,7 @@ export const UploadAudioButton: React.FC<UploadAudioModalProps> = ({
   );
 };
 
-const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
+const UploadAudioForm: FC<UploadAudioModalProps> = ({
   trackId,
   hasAudio,
   onSuccess,
@@ -63,20 +67,20 @@ const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
   const {
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<UploadAudioFormData>({
     defaultValues: {
       file: null,
     },
   });
+  const selectedFile = useWatch({ control, name: "file" });
 
-  const [uploadTrackAudio, { isLoading: isUploading }] =
-    tracksApi.useUploadTrackAudioMutation();
-  const [deleteTrackFile, { isLoading: isDeleting }] =
-    tracksApi.useDeleteTrackFileMutation();
+  const [uploadTrackAudio, { fetching: isUploading }] =
+    useUploadAudioFileMutation();
+  const [deleteTrackFile, { fetching: isDeleting }] =
+    useDeleteAudioFileMutation();
 
-  const selectedFile = watch("file");
   const isLoading = isUploading || isDeleting;
 
   const onFilesAccepted = (files: File[]) => {
@@ -89,7 +93,7 @@ const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
     if (isLoading) return;
 
     await handleApiRequest(
-      deleteTrackFile({ params: { id: trackId }, body: {} }).unwrap(),
+      await deleteTrackFile({ trackId }),
       () => {
         showSuccess(t("trackAudio.success.removed"));
         onSuccess?.();
@@ -105,10 +109,10 @@ const UploadAudioForm: React.FC<UploadAudioModalProps> = ({
     if (!data.file || isLoading) return;
 
     await handleApiRequest(
-      uploadTrackAudio({
-        params: { id: trackId },
-        body: { file: data.file },
-      }).unwrap(),
+      await uploadTrackAudio({
+        trackId,
+        file: data.file,
+      }),
       () => {
         showSuccess(t("trackAudio.success.uploaded"));
         onSuccess?.();

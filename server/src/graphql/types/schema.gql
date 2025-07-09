@@ -1,0 +1,19 @@
+type Query {
+  # Genres
+  genres: [Genre!]!
+
+  # Tracks
+  tracks(input: TrackQueryInput): PaginatedTracks!
+  trackById(id: ID!): Track
+  track(slug: String!): Track
+}
+
+type Mutation {
+  # Tracks
+  createTrack(input: CreateTrackInput!): Track!
+  updateTrack(id: ID!, input: UpdateTrackInput!): Track!
+  deleteTrack(id: ID!): Boolean!
+  deleteTracks(input: DeleteTracksInput!): Boolean!
+  uploadAudioFile(trackId: ID!, file: Upload!): Track!
+  deleteAudioFile(trackId: ID!): Track!
+}
