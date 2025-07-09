@@ -1,6 +1,6 @@
-import React from "react";
+import { useState } from "react";
 import { createContext } from "shared/lib/hooks/createContext";
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 import type { ModalContextValue, ModalState } from "./Modal.type";
 
 const initialState: ModalState = {
@@ -12,9 +12,9 @@ const initialState: ModalState = {
 export const { ModalProvider, useModal, ModalContext } = createContext(
   "Modal",
   (_: PropsWithChildren) => {
-    const [state, setState] = React.useState<ModalState>(initialState);
+    const [state, setState] = useState<ModalState>(initialState);
 
-    const openModal = (content: React.ReactNode, title?: string) => {
+    const openModal = (content: ReactNode, title?: string) => {
       setState({ isOpen: true, content, title, isLoading: false });
     };
 

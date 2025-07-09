@@ -8,22 +8,11 @@ import type { SortOption, FilterGroup } from "shared/ui/list";
 import type { TracksListProps } from "../lib/TracksList.types";
 import type { Track } from "entities/track";
 import type { SortDirection } from "shared/ui/list/lib/List.types";
-import { genresApi } from "shared/lib/api/main/genres/genres.api";
-import type { TGenresApi } from "shared/lib/api/main";
 import { useSearchParamsState } from "shared/lib/hooks";
+import { useGenresQuery } from "shared/lib/api/genres";
+import type { TGetTracksOptions } from "shared/lib/api/tracks";
 
 const DEFAULT_COVER = "https://placehold.co/400x400?text=No+Cover";
-
-type TSortParams = "title" | "artist" | "album" | "createdAt";
-
-type TSearchParams = {
-  page: number;
-  limit: number;
-  sort: TSortParams | undefined;
-  order: SortDirection | undefined;
-  search: string | undefined;
-  genre: string | undefined;
-};
 
 // ToDo: optimize and improve the list, it was developed in a rush
 
@@ -38,20 +27,19 @@ export const TracksList = ({
 }: TracksListProps) => {
   const { t } = useTranslation();
   const { searchParams, updateSearchParams, removeSearchParams } =
-    useSearchParamsState<TSearchParams>({
+    useSearchParamsState<TGetTracksOptions["input"]>({
       keys: ["page", "limit", "sort", "order", "search", "genre"],
       defaultValues: {
-        page: 1,
-        limit: 10,
+        page: "1",
+        limit: "10",
       },
     });
 
   const [selectedTrackIds, setSelectedTrackIds] = useState<string[]>([]);
 
-  const { data: genresResponse } = genresApi.useGetGenresQuery();
+  const [{ data: genresResponse }] = useGenresQuery();
 
-  const uniqueGenres: TGenresApi.TGetGenresResponse["data"] =
-    genresResponse?.data || [];
+  const uniqueGenres = genresResponse?.genres || [];
 
   const sortOptions: SortOption<Track>[] = [
     { label: t("tracks.sort.title"), value: "title" },
@@ -80,8 +68,8 @@ export const TracksList = ({
       }
 
       onQueryChange({
-        page: searchParams.page,
-        limit: searchParams.limit,
+        page: String(searchParams.page),
+        limit: String(searchParams.limit),
         ...(searchParams.search ? { search: searchParams.search } : {}),
         ...(genre ? { genre } : {}),
         ...(searchParams.sort ? { sort: searchParams.sort } : {}),
@@ -95,13 +83,13 @@ export const TracksList = ({
       updateSearchParams({
         sort: field,
         order: direction,
-        page: 1,
+        page: "1",
       });
     } else if (field === "createdAt") {
       updateSearchParams({
         sort: "createdAt",
         order: direction,
-        page: 1,
+        page: "1",
       });
     }
   };
@@ -110,11 +98,11 @@ export const TracksList = ({
     if (filters.genres?.length) {
       updateSearchParams({
         genre: filters.genres[0],
-        page: 1,
+        page: "1",
       });
     } else {
       removeSearchParams(["genre"]);
-      updateSearchParams({ page: 1 });
+      updateSearchParams({ page: "1" });
     }
   };
 
@@ -122,18 +110,18 @@ export const TracksList = ({
     if (query) {
       updateSearchParams({
         search: query,
-        page: 1,
+        page: "1",
       });
     } else {
       removeSearchParams(["search"]);
-      updateSearchParams({ page: 1 });
+      updateSearchParams({ page: "1" });
     }
   };
 
   const handlePageSizeChange = (newLimit: number) => {
     updateSearchParams({
-      limit: newLimit,
-      page: 1,
+      limit: String(newLimit),
+      page: "1",
     });
   };
 
@@ -186,11 +174,11 @@ export const TracksList = ({
       renderItem={renderTrack}
       emptyMessage={t("tracks.empty")}
       className={className}
-      page={searchParams.page}
-      pageSize={searchParams.limit}
+      page={Number(searchParams.page)}
+      pageSize={Number(searchParams.limit)}
       totalItems={totalItems}
       onPageChange={(newPage) => {
-        updateSearchParams({ page: newPage });
+        updateSearchParams({ page: String(newPage) });
       }}
       onPageSizeChange={handlePageSizeChange}
       pageSizeOptions={[5, 10, 20, 50, 100]}

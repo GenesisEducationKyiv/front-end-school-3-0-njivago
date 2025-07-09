@@ -1,8 +1,6 @@
-import type { TTracksApi } from "shared/lib/api/main/tracks";
+import type { OperationResult } from "urql";
 import type { CreateTrackSchema } from "./createTrack.schema";
 
 export type CreateTrackProps = {
-  onSubmit: (
-    data: CreateTrackSchema
-  ) => Promise<TTracksApi.TCreateTrackResponse>;
+  onSubmit: (data: CreateTrackSchema) => Promise<OperationResult>;
 };
