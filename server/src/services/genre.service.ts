@@ -1,5 +1,7 @@
 import { getGenres } from "../utils/db";
-import type { Genre } from "../generated/graphql";
+import type { Scalars } from "../generated/graphql";
+
+type Genre = Scalars["Genre"]["output"];
 
 export class GenreService {
   async getAll(): Promise<Genre[]> {
