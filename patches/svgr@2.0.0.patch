@@ -1,0 +1,15 @@
+diff --git a/package.json b/package.json
+index 2f6663260f235f992600e59efd2ba0885b713616..9633fcdd442db5573c8e0388c3da54a68a33b0c2 100644
+--- a/package.json
++++ b/package.json
+@@ -20,6 +20,6 @@
+     "github-current-user": "^2.5.0"
+   },
+   "scripts": {
+-    "postinstall": "node message.js; sleep 10; exit 1;"
++    "postinstall": "node message.js"
+   }
+ }
+diff --git a/yarn.lock b/yarn.lock
+deleted file mode 100644
+index c1cbf84d3255e33d8298a7c05aef5766891aaf08..0000000000000000000000000000000000000000

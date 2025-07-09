@@ -1,0 +1,22 @@
+type Track {
+  id: ID!
+  title: String!
+  artist: String!
+  album: String
+  genres: [Genre!]!
+  slug: String!
+  coverImage: String
+  audioFile: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PaginatedTracks {
+  data: [Track!]!
+  meta: PaginationMeta!
+}
+
+type BatchDeleteResponse {
+  success: [ID!]!
+  failed: [ID!]!
+}
