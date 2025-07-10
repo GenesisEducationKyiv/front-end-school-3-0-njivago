@@ -6,13 +6,13 @@
   "scripts": {
     "start": "vite --host",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --no-open",
     "type-check": "tsc --project tsconfig.json",
     "test": "playwright test",
     "test:debug": "playwright test --debug",
     "test:ct": "playwright test --config=playwright-ct.config.ts",
     "test:ct:debug": "playwright test --config=playwright-ct.config.ts --debug",
-    "pw:browsers": "exec playwright install --with-deps"
+    "pw:browsers": "exec playwright install --with-deps chromium"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@playwright/experimental-ct-react": "1.53.1",
     "@playwright/test": "1.53.1",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.16.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",

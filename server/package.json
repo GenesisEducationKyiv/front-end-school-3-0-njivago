@@ -19,9 +19,6 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
-  "engines": {
-    "node": "20.13.1"
-  },
   "dependencies": {
     "@apollo/server": "^4.12.2",
     "@as-integrations/fastify": "^2.1.1",

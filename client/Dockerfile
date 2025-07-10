@@ -10,3 +10,10 @@ COPY client ./client/
 
 RUN pnpm install --frozen-lockfile --filter client --ignore-scripts
 RUN pnpm --filter client build
+
+EXPOSE 3000
+
+ENV HOST=0.0.0.0
+ENV PORT=3000
+
+CMD ["pnpm", "--filter", "client", "preview"]
