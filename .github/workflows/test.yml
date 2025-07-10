@@ -58,9 +58,6 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter client pw:browsers
 
-      - name: Build client
-        run: pnpm build:client
-
       - name: Run e2e tests
         run: pnpm --filter client test
 
