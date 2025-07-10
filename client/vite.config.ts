@@ -19,7 +19,7 @@ export default defineConfig(async ({ mode }) => {
           plugins: [["babel-plugin-react-compiler", { target: "19" }]],
         },
       }),
-      visualizer({ open: true }),
+      visualizer({ open: false }),
       compression({
         algorithm: "gzip",
         ext: ".gz",

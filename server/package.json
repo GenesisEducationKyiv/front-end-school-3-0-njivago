@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
-    "build": "tsc",
+    "build": "tsc && copyfiles -u 1 'src/graphql/**/*.gql' dist",
     "lint": "eslint src --ext .ts",
     "type-check": "tsc --project tsconfig.json",
     "test": "vitest run src/__tests__/health.test.ts",
@@ -49,6 +49,7 @@
     "@types/node": "^22.13.9",
     "@types/supertest": "^6.0.2",
     "@vitest/coverage-v8": "^3.0.7",
+    "copyfiles": "^2.4.1",
     "nodemon": "^3.1.9",
     "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
