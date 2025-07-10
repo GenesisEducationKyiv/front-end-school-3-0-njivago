@@ -20,7 +20,8 @@
   },
   "author": "Nikita Kuzmenko",
   "engines": {
-    "node": "20.13.1"
+    "node": "20.19.3",
+    "pnpm": "10.13.1"
   },
   "license": "ISC",
   "devDependencies": {
@@ -38,5 +39,6 @@
     "patchedDependencies": {
       "svgr@2.0.0": "patches/svgr@2.0.0.patch"
     }
-  }
+  },
+  "packageManager": "pnpm@10.13.1"
 }

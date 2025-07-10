@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node-version: [20.13.1]
+        node-version: [20.19.3]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-libs
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        node-version: [20.13.1]
+        node-version: [20.19.3]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-libs

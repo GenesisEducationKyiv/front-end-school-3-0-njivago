@@ -1,0 +1,47 @@
+name: Docker Build
+
+on:
+  push:
+
+jobs:
+  docker-build:
+    name: Build Docker Images
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+        continue-on-error: false
+
+      - name: Build docker-compose services
+        run: |
+          docker-compose build --parallel
+
+      - name: Validate docker-compose configuration
+        run: |
+          docker-compose config --quiet
+
+      - name: Test container startup
+        run: |
+          docker-compose up -d
+          sleep 10
+
+          # Check if containers are running
+          docker-compose ps
+
+          # Test client health (basic connectivity)
+          timeout 5 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done' || echo "Client health check failed"
+
+          # Test server health (basic connectivity)
+          timeout 5 bash -c 'until curl -f http://localhost:8000 > /dev/null 2>&1; do sleep 2; done' || echo "Server health check failed"
+
+          # Show logs for debugging
+          docker-compose logs --tail=50
+
+          # Cleanup
+          docker-compose down

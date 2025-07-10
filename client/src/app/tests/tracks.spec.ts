@@ -1,74 +1,92 @@
 import { expect } from "@playwright/test";
-import { test, mockedTracks } from "shared/lib/tests/fixtures";
+import { test } from "shared/lib/tests/fixtures/testcontainers";
 
 const DEFAULT_TIMEOUT = 500;
 
-test("complete e2e user journey: view, search, paginate, and edit tracks", async ({
+test("complete e2e user journey: create, edit, and persist tracks", async ({
   page,
-  mockTracks,
 }) => {
-  await mockTracks();
   await page.waitForTimeout(DEFAULT_TIMEOUT);
 
   const initialTracks = await page.getByTestId("track-item").all();
-  expect(initialTracks.length).toBe(
-    mockedTracks.length < 10 ? mockedTracks.length : 10
-  );
-  await expect(page.getByText("Test Track 1")).toBeVisible();
+  expect(initialTracks.length).toBe(0);
 
-  const searchInput = page.getByTestId("search-input");
-  await searchInput.fill("test track");
-  await page.waitForTimeout(DEFAULT_TIMEOUT);
-  const searchResults = await page.getByTestId("track-item").all();
-  expect(searchResults.length).toBeLessThanOrEqual(initialTracks.length);
+  const addTrackButton = page.getByTestId("create-track-button");
+  await addTrackButton.click();
 
-  await searchInput.clear();
-  await page.waitForTimeout(DEFAULT_TIMEOUT);
-  const restoredTracks = await page.getByTestId("track-item").all();
-  expect(restoredTracks.length).toBe(initialTracks.length);
+  const createTrackForm = page.getByTestId("track-form");
+  await expect(createTrackForm).toBeVisible();
 
-  const nextPageButton = page.getByTestId("pagination-next");
-  await nextPageButton.click();
-  await page.waitForTimeout(DEFAULT_TIMEOUT);
-  const nextPageTracks = await page.getByTestId("track-item").all();
-  expect(nextPageTracks.length).toBeGreaterThan(0);
+  const titleInput = createTrackForm.getByTestId("input-title");
+  const artistInput = createTrackForm.getByTestId("input-artist");
+  const albumInput = createTrackForm.getByTestId("input-album");
+  const genresInput = createTrackForm.getByTestId("genre-input");
 
-  const trackToEdit = mockedTracks[0];
-  const newTitle = "Updated Test Track";
+  await titleInput.fill("My First Test Track");
+  await artistInput.fill("Test Artist");
+  await albumInput.fill("Test Album");
 
-  await page.route(`**/api/tracks/${trackToEdit.id}`, async (route) => {
-    const request = route.request();
-    if (request.method() === "PUT") {
-      const postData = await request.postDataJSON();
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          data: { ...trackToEdit, ...postData },
-        }),
-      });
-    }
-  });
+  await genresInput.click();
+  await genresInput.fill("Rock");
+  await page.getByText("Rock").click();
 
-  const firstPageButton = page.getByTestId("pagination-prev");
-  if (await firstPageButton.isVisible()) {
-    await firstPageButton.click();
-    await page.waitForTimeout(DEFAULT_TIMEOUT);
-  }
+  await createTrackForm.getByTestId("submit-button").click();
+  await expect(createTrackForm).not.toBeVisible();
 
-  const firstTrack = page.getByTestId("track-item").first();
+  await expect(page.getByText("My First Test Track")).toBeVisible();
+  await expect(page.getByText("Test Artist")).toBeVisible();
+
+  await addTrackButton.click();
+  await expect(createTrackForm).toBeVisible();
+
+  await titleInput.fill("My Second Test Track");
+  await artistInput.fill("Another Artist");
+  await albumInput.fill("Another Album");
+
+  await genresInput.click();
+  await genresInput.fill("Jazz");
+  await page.getByText("Jazz").click();
+
+  await createTrackForm.getByTestId("submit-button").click();
+  await expect(createTrackForm).not.toBeVisible();
+
+  const tracksAfterCreation = await page.getByTestId("track-item").all();
+  expect(tracksAfterCreation.length).toBe(2);
+  await expect(page.getByText("My Second Test Track")).toBeVisible();
+  await expect(page.getByText("Another Artist")).toBeVisible();
+
+  const firstTrack = page
+    .getByTestId("track-item")
+    .filter({ hasText: "My First Test Track" })
+    .first();
+  await expect(firstTrack).toBeVisible();
   await firstTrack.getByTestId("edit-track").click();
 
-  const trackForm = await page.getByTestId("track-form");
-  await expect(trackForm).toBeVisible();
+  const editTrackForm = page.getByTestId("track-form");
+  await expect(editTrackForm).toBeVisible();
 
-  const titleInput = trackForm.getByTestId("input-title");
-  await titleInput.clear();
-  await titleInput.fill(newTitle);
+  const editTitleInput = editTrackForm.getByTestId("input-title");
+  await editTitleInput.clear();
+  await editTitleInput.fill("My Updated First Track");
 
-  await trackForm.getByTestId("submit-button").click();
+  await editTrackForm.getByTestId("submit-button").click();
+  await expect(editTrackForm).not.toBeVisible();
 
-  await expect(page.getByTestId("track-form")).not.toBeVisible();
-  await expect(page.getByText(newTitle)).toBeVisible();
-  await expect(page.getByText(trackToEdit.title)).not.toBeVisible();
+  await expect(page.getByText("My Updated First Track")).toBeVisible();
+  await expect(page.getByText("My First Test Track")).not.toBeVisible();
+
+  await page.reload();
+
+  await page.waitForTimeout(DEFAULT_TIMEOUT);
+
+  const tracksAfterReload = await page.getByTestId("track-item").all();
+  expect(tracksAfterReload.length).toBe(2);
+
+  await expect(page.getByText("My Updated First Track")).toBeVisible();
+  await expect(page.getByText("Test Artist")).toBeVisible();
+
+  await expect(page.getByText("My Second Test Track")).toBeVisible();
+  await expect(page.getByText("Another Artist")).toBeVisible();
+
+  await expect(page.getByText("My First Test Track")).not.toBeVisible();
 });
