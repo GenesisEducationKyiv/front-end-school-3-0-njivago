@@ -35,10 +35,10 @@ jobs:
           docker-compose ps
 
           # Test client health (basic connectivity)
-          timeout 30 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done' || echo "Client health check failed"
+          timeout 5 bash -c 'until curl -f http://localhost:3000 > /dev/null 2>&1; do sleep 2; done' || echo "Client health check failed"
 
           # Test server health (basic connectivity)
-          timeout 30 bash -c 'until curl -f http://localhost:8000 > /dev/null 2>&1; do sleep 2; done' || echo "Server health check failed"
+          timeout 5 bash -c 'until curl -f http://localhost:8000 > /dev/null 2>&1; do sleep 2; done' || echo "Server health check failed"
 
           # Show logs for debugging
           docker-compose logs --tail=50
