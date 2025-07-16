@@ -1,0 +1,7 @@
+type Subscription {
+  activeTrackChanged: String!
+}
+
+type Query {
+  activeTrack: String!
+}

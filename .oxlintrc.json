@@ -1,0 +1,48 @@
+{
+  "plugins": [
+    "react",
+    "typescript",
+    "react-perf",
+    "import",
+    "node",
+    "oxc",
+    "promise"
+  ],
+  "env": { "browser": true, "node": true },
+  "rules": {
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "no-undef": "error",
+    "no-constant-binary-expression": "error",
+    "no-empty": "warn",
+    "prefer-const": "error",
+    "no-console": "warn",
+    "react/prefer-stateless-function": "error",
+    "react/no-deprecated": "error",
+    "react/no-unsafe": "error",
+    "react/no-array-index-key": "warn",
+    "react/jsx-key": "error",
+    "react/jsx-no-duplicate-props": "error",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "typescript/prefer-ts-expect-error": "error",
+    "typescript/no-explicit-any": "warn",
+    "unicorn/prefer-set-has": "error",
+    "import/consistent-type-specifier-style": "error",
+    "no-duplicate-imports": "off",
+    "typescript/consistent-type-imports": "error",
+    "import/first": ["error", "absolute-first"],
+    "import/no-cycle": "error"
+  },
+  "ignores": ["node_modules", "dist", "coverage"]
+}

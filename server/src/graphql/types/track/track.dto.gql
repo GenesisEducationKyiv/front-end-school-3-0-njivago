@@ -1,0 +1,43 @@
+input CreateTrackInput {
+  title: String!
+  artist: String!
+  album: String
+  genres: [Genre!]!
+  coverImage: String
+}
+
+input UpdateTrackInput {
+  title: String
+  artist: String
+  album: String
+  genres: [Genre!]
+  coverImage: String
+  audioFile: String
+  slug: String
+}
+
+input TrackQueryInput {
+  page: String
+  limit: String
+  sort: TrackSortField
+  order: SortOrder
+  search: String
+  genre: Genre
+  artist: String
+}
+
+input DeleteTracksInput {
+  ids: [ID!]!
+}
+
+enum TrackSortField {
+  title
+  artist
+  album
+  createdAt
+}
+
+enum SortOrder {
+  asc
+  desc
+}
