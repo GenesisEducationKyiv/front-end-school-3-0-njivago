@@ -13,4 +13,5 @@ I want to mention that there are several areas for future improvement.
 3. After migrating from REST to GraphQL, mimetype handling doesn't work properly - so fix Upload scalar
 4. There is problem with E2E test job, it seems like playwright can't reach resources on CI, but locally it works fine
 5. Refactor modals system
+6. Use svg sprites instead of svgr
    
