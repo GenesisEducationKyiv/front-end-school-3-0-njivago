@@ -35,7 +35,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: client-component-test-results
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 30
 
   client-e2e-tests:
@@ -66,53 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: client-e2e-test-results
-          path: playwright-report/
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 30
-
-  test-summary:
-    name: Test Summary
-    runs-on: ubuntu-22.04
-    needs: [client-component-tests, client-e2e-tests]
-    if: always()
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js and pnpm
-        uses: ./.github/actions/setup-libs
-        with:
-          node-version: 20.19.3
-
-      - name: Download client component test results
-        uses: actions/download-artifact@v4
-        with:
-          name: client-component-test-results
-          path: client-component-results/
-
-      - name: Download client e2e test results
-        uses: actions/download-artifact@v4
-        with:
-          name: client-e2e-test-results
-          path: client-e2e-results/
-
-      - name: Generate test summary
-        run: |
-          echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Client Tests" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ needs.client-component-tests.result }}" == "success" ]; then
-            echo "✅ Component tests passed" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ Component tests failed" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          if [ "${{ needs.client-e2e-tests.result }}" == "success" ]; then
-            echo "✅ E2E tests passed" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ E2E tests failed" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "View detailed results in the workflow artifacts above." >> $GITHUB_STEP_SUMMARY

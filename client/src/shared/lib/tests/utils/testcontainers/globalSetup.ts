@@ -1,15 +1,10 @@
 // oxlint-disable no-console typescript-eslint/no-explicit-any
 
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import { ServerContainer } from "./ServerContainer";
+import { writeContainerInfoToFile } from "./getContainerInfoFromFile";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const CONTAINER_INFO_FILE = path.join(__dirname, "container-info.json");
+const RETRY_TIMEOUT = 2000;
+const MAX_RETRIES = 30;
 
 export default async function globalSetup() {
   console.log("🐳 Starting testcontainer for e2e tests...");
@@ -18,7 +13,7 @@ export default async function globalSetup() {
 
   await container.start();
 
-  let retries = 30;
+  let retries = MAX_RETRIES;
   while (retries > 0) {
     try {
       const isHealthy = await container.healthCheck();
@@ -34,7 +29,7 @@ export default async function globalSetup() {
     }
     retries--;
     if (retries > 0) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, RETRY_TIMEOUT));
     }
   }
 
@@ -45,16 +40,13 @@ export default async function globalSetup() {
   }
 
   const containerInfo = {
-    host: container.getContainer()?.getHost(),
-    port: container.getContainer()?.getMappedPort(8000),
-    baseUrl: container.getBaseUrl(),
-    graphqlUrl: container.getGraphQLUrl(),
+    host: container.startedContainer?.getHost() ?? "localhost",
+    port: container.startedContainer?.getMappedPort(8000) ?? 8000,
+    baseUrl: container.baseUrl,
+    graphqlUrl: container.graphQLUrl,
   };
 
-  await fs.writeFile(
-    CONTAINER_INFO_FILE,
-    JSON.stringify(containerInfo, null, 2)
-  );
+  await writeContainerInfoToFile(containerInfo);
 
   console.log(
     `Setup complete! Container available at ${containerInfo.baseUrl}`
