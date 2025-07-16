@@ -9,8 +9,9 @@ export const test = base.extend({
     const { host, port } = await getContainerInfoFromFile();
 
     await page.route(`${API_URL}/**`, async (route) => {
-      const url = route.request().url();
-      const newUrl = url.replace(API_URL, `http://${host}:${String(port)}`);
+      const url = new URL(route.request().url());
+      url.host = `${host}:${port}`;
+      const newUrl = url.toString();
 
       await route.continue({ url: newUrl });
     });

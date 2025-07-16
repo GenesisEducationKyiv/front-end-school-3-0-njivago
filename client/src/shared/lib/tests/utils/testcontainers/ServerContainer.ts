@@ -57,7 +57,7 @@ export class ServerContainer {
     }
   }
 
-  getBaseUrl(): string {
+  get baseUrl(): string {
     if (!this.container) {
       throw new Error("Container not started. Call start() first.");
     }
@@ -67,17 +67,17 @@ export class ServerContainer {
     return `http://${host}:${port}`;
   }
 
-  getGraphQLUrl(): string {
-    return `${this.getBaseUrl()}${this.graphqlPath}`;
+  get graphQLUrl(): string {
+    return `${this.baseUrl}${this.graphqlPath}`;
   }
 
-  getContainer(): StartedTestContainer | null {
+  get startedContainer(): StartedTestContainer | null {
     return this.container;
   }
 
   async healthCheck(): Promise<boolean> {
     try {
-      const url = this.getGraphQLUrl();
+      const url = this.graphQLUrl;
       console.log(`Health checking GraphQL endpoint: ${url}`);
 
       const response = await fetch(url, {
