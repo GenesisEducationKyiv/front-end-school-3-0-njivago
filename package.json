@@ -15,12 +15,15 @@
     "test": "pnpm test:client && pnpm test:server",
     "test:client": "pnpm --filter client test && pnpm --filter client test:ct",
     "test:server": "pnpm --filter server test",
+    "dev:storybook": "pnpm --filter client storybook",
+    "build:storybook": "pnpm --filter client storybook:build",
     "validate": "pnpm type-check && pnpm lint",
     "prepare": "lefthook install"
   },
   "author": "Nikita Kuzmenko",
   "engines": {
-    "node": "20.13.1"
+    "node": "20.19.3",
+    "pnpm": "10.13.1"
   },
   "license": "ISC",
   "devDependencies": {
@@ -38,5 +41,6 @@
     "patchedDependencies": {
       "svgr@2.0.0": "patches/svgr@2.0.0.patch"
     }
-  }
+  },
+  "packageManager": "pnpm@10.13.1"
 }

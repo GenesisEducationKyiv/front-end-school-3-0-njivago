@@ -17,5 +17,11 @@ export const tracksCacheExchange: CacheExchangeOpts["updates"] = {
     deleteTracks: (_result, _args, cache, _info) => {
       invalidateTracks(cache);
     },
+    updateTrack: (_result, _args, cache, _info) => {
+      invalidateTracks(cache);
+    },
+    createTrack: (_result, _args, cache, _info) => {
+      invalidateTracks(cache);
+    },
   },
 };

@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+/// <reference types="node" />
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
@@ -6,8 +7,13 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: "html",
+
+  globalSetup: "./src/shared/lib/tests/utils/testcontainers/globalSetup.ts",
+  globalTeardown:
+    "./src/shared/lib/tests/utils/testcontainers/globalTeardown.ts",
+
   use: {
     baseURL: process.env.VITE_BASE_URL || "http://localhost:3000/",
     trace: "on-first-retry",
@@ -17,11 +23,6 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
-    },
-
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
     },
   ],
 

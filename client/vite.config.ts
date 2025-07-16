@@ -19,10 +19,10 @@ export default defineConfig(async ({ mode }) => {
           plugins: [["babel-plugin-react-compiler", { target: "19" }]],
         },
       }),
-      visualizer({ open: true }),
+      visualizer({ open: false }),
       compression({
-        algorithm: "gzip",
-        ext: ".gz",
+        algorithm: "brotliCompress",
+        ext: ".br",
         threshold: 1024,
       }),
     ],
@@ -42,22 +42,43 @@ export default defineConfig(async ({ mode }) => {
     },
     build: {
       outDir: resolve(__dirname, "dist"),
-      sourcemap: true,
+      sourcemap: mode !== "production",
+      target: "esnext",
       rollupOptions: {
         output: {
           manualChunks: {
-            vendor: [
-              "react",
-              "react-dom",
+            "react-vendor": ["react", "react-dom"],
+            "graphql-vendor": [
               "graphql",
               "graphql-ws",
               "urql",
+              "@urql/core",
+              "@urql/exchange-graphcache",
+            ],
+            "form-vendor": [
               "react-hook-form",
-              "i18next",
+              "@hookform/resolvers",
+              "valibot",
+            ],
+            "i18n-vendor": ["i18next", "react-i18next"],
+            "ui-vendor": [
+              "react-dropzone",
+              "react-toastify",
+              "clsx",
+              "tailwind-merge",
             ],
           },
+          chunkFileNames: (chunkInfo) => {
+            if (chunkInfo.name === "vendor") {
+              return "vendor-[hash].js";
+            }
+            return "[name]-[hash].js";
+          },
+          entryFileNames: "entry-[hash].js",
+          assetFileNames: "assets/[name]-[hash].[ext]",
         },
       },
+      chunkSizeWarningLimit: 1000,
     },
     define: {
       "process.env.VITE_BASE_URL": JSON.stringify(env.VITE_BASE_URL),
