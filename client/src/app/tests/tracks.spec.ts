@@ -8,8 +8,6 @@ test("complete e2e user journey: create, edit, and persist tracks", async ({
 }) => {
   await page.waitForTimeout(DEFAULT_TIMEOUT);
 
-  console.log(page.url());
-
   const initialTracks = await page.getByTestId("track-item").all();
   expect(initialTracks.length).toBe(0);
 
