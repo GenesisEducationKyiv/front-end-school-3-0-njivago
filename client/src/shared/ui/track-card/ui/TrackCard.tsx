@@ -24,6 +24,9 @@ export const TrackCard = ({
         src={cover}
         alt={title}
         className="h-16 w-16 rounded-xl object-cover"
+        loading="lazy"
+        decoding="async"
+        fetchPriority="high"
       />
 
       <div className="flex flex-1 flex-col gap-1">

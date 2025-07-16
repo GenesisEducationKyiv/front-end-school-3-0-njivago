@@ -15,6 +15,8 @@
     "test": "pnpm test:client && pnpm test:server",
     "test:client": "pnpm --filter client test && pnpm --filter client test:ct",
     "test:server": "pnpm --filter server test",
+    "dev:storybook": "pnpm --filter client storybook",
+    "build:storybook": "pnpm --filter client storybook:build",
     "validate": "pnpm type-check && pnpm lint",
     "prepare": "lefthook install"
   },
