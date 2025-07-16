@@ -41,6 +41,7 @@ jobs:
           retention-days: 30
 
   client-e2e-tests:
+    needs: client-component-tests
     name: Client E2E tests
     runs-on: ubuntu-22.04
     strategy:
